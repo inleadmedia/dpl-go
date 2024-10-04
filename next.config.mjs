@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // for image loading
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "robohash.org"
+      }
+    ]
+  },
+
+  // for svg loading
   webpack: (config, options) => {
     config.module.rules.push({
       test: /\.svg$/,

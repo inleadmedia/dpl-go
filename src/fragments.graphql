@@ -1,0 +1,294 @@
+fragment ManifestationsSimple on Manifestations {
+  all {
+    ...ManifestationsSimpleFields
+  }
+  latest {
+    ...ManifestationsSimpleFields
+  }
+  bestRepresentation {
+    ...ManifestationsSimpleFields
+  }
+}
+
+fragment ManifestationsAccess on Manifestations {
+  all {
+    pid,
+    identifiers {
+      type
+      value
+    }
+    access {
+      __typename
+      ... on AccessUrl {
+        origin
+        url
+        loginRequired
+      }
+      ... on InfomediaService {
+        id
+      }
+      ... on InterLibraryLoan {
+        loanIsPossible
+      }
+      ... on Ereol {
+        origin
+        url
+        canAlwaysBeLoaned
+      }
+      ... on DigitalArticleService {
+        issn
+      }
+    }
+  }
+}
+
+fragment ManifestationsSimpleFields on Manifestation {
+  pid
+  genreAndForm
+  source
+  ...WithLanguages
+  titles {
+    main
+    original
+  }
+  fictionNonfiction {
+    display
+    code
+  }
+  materialTypes {
+    specific
+  }
+  creators {
+    display
+    __typename
+  }
+  publisher
+  identifiers {
+    value
+  }
+  contributors {
+    display
+  }
+  edition {
+    summary
+    publicationYear {
+      display
+    }
+  }
+  dateFirstEdition {
+    display
+    year
+  }
+  audience {
+    generalAudience
+  }
+  physicalDescriptions {
+    numberOfPages
+    playingTime
+  }
+  materialTypes {
+    specific
+  }
+  accessTypes {
+    code
+  }
+  access {
+    __typename
+    ... on AccessUrl {
+      origin
+      url
+      loginRequired
+    }
+    ... on InfomediaService {
+      id
+    }
+    ... on InterLibraryLoan {
+      loanIsPossible
+    }
+    ... on Ereol {
+      origin
+      url
+      canAlwaysBeLoaned
+    }
+    ... on DigitalArticleService {
+      issn
+    }
+  }
+  shelfmark {
+    postfix
+    shelfmark
+  }
+  workYear {
+    year
+  }
+  catalogueCodes {
+    nationalBibliography
+    otherCatalogues
+  }
+  cover {
+    thumbnail
+    detail_117
+    detail_207
+    detail_42
+    detail_500
+  }
+}
+
+fragment ManifestationReviewFields on Manifestation {
+  pid
+  creators {
+    display
+  }
+  access {
+    __typename
+    ... on InfomediaService {
+      id
+    }
+    ... on DigitalArticleService {
+      issn
+    }
+    ... on AccessUrl {
+      url
+      origin
+    }
+  }
+  edition {
+    publicationYear {
+      display
+    }
+  }
+  hostPublication {
+    title
+    issue
+  }
+  creators {
+    display
+  }
+  physicalDescriptions {
+    summary
+  }
+  dateFirstEdition {
+    display
+  }
+  workYear {
+    display
+  }
+  review {
+    rating
+    reviewByLibrarians {
+      content
+      heading
+      type
+      manifestations {
+        pid
+        titles {
+          main
+        }
+      }
+    }
+  }
+}
+
+fragment SeriesSimple on Series {
+  title
+  isPopular
+  numberInSeries {
+    display
+    number
+  }
+  readThisFirst
+  readThisWhenever
+}
+
+fragment WorkAccess on Work {
+  workId
+  manifestations {
+    ...ManifestationsAccess
+  }
+}
+
+fragment WorkSmall on Work {
+  workId
+  titles {
+    full
+    original
+  }
+  abstract
+  creators {
+    display
+    __typename
+  }
+  series {
+    ...SeriesSimple
+  }
+  seriesMembers {
+    workId
+    titles {
+      main
+      full
+      original
+    }
+  }
+  workYear {
+    year
+  }
+  genreAndForm
+  manifestations {
+    ...ManifestationsSimple
+  }
+  materialTypes {
+    materialTypeGeneral {
+      display
+    }
+  }
+}
+
+fragment WorkMedium on Work {
+  ...WorkSmall
+  mainLanguages {
+    display
+    isoCode
+  }
+  subjects {
+    all {
+      display
+    }
+    dbcVerified {
+      display
+    }
+  }
+  fictionNonfiction {
+    display
+    code
+  }
+  dk5MainEntry {
+    display
+  }
+  relations {
+    hasReview {
+      pid
+    }
+    hasAdaptation {
+      ownerWork {
+        workId
+        workTypes
+        titles {
+          main
+        }
+      }
+    }
+  }
+}
+
+# Fragments used to ensure consistency for properties between different queries.
+# Generated types from these fragments should not be used directly but instead
+# inferred by Pick'ing fields from other types.
+
+fragment WithLanguages on Manifestation {
+  languages {
+    main {
+      display
+      isoCode
+    }
+  }
+}
