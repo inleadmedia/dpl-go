@@ -1,0 +1,15 @@
+query getAdgangsplatformTokens {
+  dplTokens {
+    adgangsplatformen {
+      ...TokensAdgangsplatformen
+    }
+  }
+}
+
+query getUniloginTokens {
+  dplTokens {
+    unilogin {
+      ...TokensUnlogin
+    }
+  }
+}

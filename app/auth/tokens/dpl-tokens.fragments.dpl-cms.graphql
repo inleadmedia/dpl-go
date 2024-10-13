@@ -1,0 +1,20 @@
+fragment TokensAdgangsplatformen on AdgangsplatformenTokens {
+  library
+  user
+}
+
+fragment TokensUnlogin on UniloginTokens {
+  access_token
+  id_token
+  refresh_token
+  expires_in
+}
+
+# fragment DplOauthTokens on DplTokens {
+#   adgangsplatformen {
+#     ...TokensAdgangsplatformen
+#   }
+#   unilogin {
+#     ...TokensUnlogin
+#   }
+# }
