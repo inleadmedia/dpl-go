@@ -21,9 +21,7 @@ const nextConfig = {
         },
       ],
     })
-    if (isServer) {
-      config.devtool = "source-map"
-    }
+
     return config
   },
 }
