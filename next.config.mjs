@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
       {
@@ -20,6 +21,9 @@ const nextConfig = {
         },
       ],
     })
+    if (isServer) {
+      config.devtool = "source-map"
+    }
     return config
   },
 }
