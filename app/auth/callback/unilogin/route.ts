@@ -1,37 +1,43 @@
 import { NextRequest } from "next/server"
-import { IntrospectionResponse } from "openid-client"
+import * as client from "openid-client"
 
 import goConfig from "@/lib/config/config"
-import { getUniloginClient, uniloginClientConfig } from "@/lib/session/oauth/uniloginClient"
+import { getUniloginClientConfig, uniloginClientSettings } from "@/lib/session/oauth/uniloginClient"
 import { getSession, setTokensOnSession } from "@/lib/session/session"
 import { TTokenSet } from "@/lib/types/session"
 
 import schemas from "./schemas"
 
-export interface TIntrospectionResponse extends IntrospectionResponse {
+export interface TIntrospectionResponse extends client.IntrospectionResponse {
   uniid: string
   institutionIds: string
 }
 
 export async function GET(request: NextRequest) {
   const session = await getSession()
-  const client = await getUniloginClient()
-  const params = client.callbackParams(request.nextUrl.toString())
+  const config = await getUniloginClientConfig()
+  const currentUrl = new URL(request.url)
 
   // Fetch all user/token info.
   try {
-    const tokenSetResponse = await client.callback(uniloginClientConfig.redirect_uri, params, {
-      code_verifier: session.code_verifier,
+    const tokenSetResponse = await client.authorizationCodeGrant(config, currentUrl, {
+      pkceCodeVerifier: session.code_verifier,
+      idTokenExpected: true,
     })
+
     const tokenSet = schemas.tokenSet.parse(tokenSetResponse) as TTokenSet
 
-    const introspectResponse = (await client.introspect(
+    const introspectResponse = (await client.tokenIntrospection(
+      config,
       tokenSet.access_token!
     )) as TIntrospectionResponse
     const introspect = schemas.introspect.parse(introspectResponse)
 
-    const userinfoResponse = await client.userinfo(tokenSetResponse)
-    const userinfo = schemas.userInfo.parse(userinfoResponse)
+    const claims = tokenSetResponse.claims()!
+
+    // UserInfo Request
+    const userInfoResponse = await client.fetchUserInfo(config, tokenSet.access_token, claims.sub)
+    const userinfo = schemas.userInfo.parse(userInfoResponse)
 
     // Set basic session info.
     session.isLoggedIn = true
@@ -49,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     await session.save()
 
-    return Response.redirect(uniloginClientConfig.post_login_route)
+    return Response.redirect(uniloginClientSettings.post_login_route)
   } catch (error) {
     console.error(error)
     // TODO: Error page or redirect to login page.
