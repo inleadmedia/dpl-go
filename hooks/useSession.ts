@@ -26,12 +26,23 @@ const fetchSession = async ({
 export default function useSession() {
   const [session, setSession] = useState<TSessionData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const reloadSession = Boolean(searchParams.get("reload-session"))
 
   useEffect(() => {
     fetchSession({
       setSessionHandler: setSession,
       setLoadingHandler: setIsLoading,
     })
-  }, [session?.isLoggedIn, session?.access_token])
+
+    if (reloadSession) {
+      const params = new URLSearchParams(searchParams)
+      params.delete("reload-session")
+      router.replace(`${pathname}?${params.toString()}`)
+    }
+  }, [reloadSession])
+
   return { session, isLoading }
 }

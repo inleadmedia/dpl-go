@@ -22,10 +22,9 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   //   session.destroy();
   //   return NextResponse.redirect(new URL('/', request.url), { headers: response.headers });
   // }
-
   if (accessTokenShouldBeRefreshed(session)) {
-    const currentPath = new URL(request.nextUrl.pathname, goConfig("app.url")).toString()
-    const url = goConfig("app.url")
+    const currentPath = new URL(pathname, goConfig<string>("app.url"))
+    const url = goConfig<string>("app.url")
     return NextResponse.redirect(`${url}/auth/token/refresh?redirect=${currentPath}`, {
       headers: response.headers,
     })

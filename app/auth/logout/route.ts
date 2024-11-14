@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import * as client from "openid-client"
 
 import goConfig from "@/lib/config/config"
 import { getUniloginClientConfig } from "@/lib/session/oauth/uniloginClient"
@@ -23,9 +24,12 @@ export async function GET() {
     return Response.redirect(appUrl)
   }
 
-  const endSessionUrl = new URL(endSessionEndpoint)
-  endSessionUrl.searchParams.append("post_logout_redirect_uri", appUrl.toString())
-  endSessionUrl.searchParams.append("id_token_hint", id_token)
+  const endSessionUrl = client.buildEndSessionUrl(config, {
+    id_token_hint: id_token,
+  })
 
-  return Response.redirect(endSessionUrl)
+  // End session in Unilogin SSO.
+  await fetch(endSessionUrl)
+
+  return Response.redirect(`${appUrl}?reload-session=true`)
 }
