@@ -2,6 +2,7 @@ import { add, isPast, sub } from "date-fns"
 import { IronSession, SessionOptions, getIronSession } from "iron-session"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
+import { TokenEndpointResponse } from "openid-client"
 
 import goConfig from "../config/config"
 import { TSessionType, TTokenSet } from "../types/session"
