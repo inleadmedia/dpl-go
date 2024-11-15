@@ -2,7 +2,7 @@ import Link from "next/link"
 import React from "react"
 
 import { WorkTeaserFragment } from "@/lib/graphql/generated/fbi/graphql"
-import { resolveWorkUrl } from "@/lib/helpers/helper.routes"
+import { resolveUrl } from "@/lib/helpers/helper.routes"
 import { getIsbnsFromWork } from "@/lib/helpers/ids"
 import { useGetCoverCollection } from "@/lib/rest/cover-service-api/generated/cover-service"
 import { GetCoverCollectionSizesItem } from "@/lib/rest/cover-service-api/generated/model"
@@ -18,7 +18,7 @@ type WorkCardProps = {
 }
 
 const WorkCard = ({ work }: WorkCardProps) => {
-  const { data: dataCovers } = useGetCoverCollection({
+  const { data: dataCovers, isLoading: isLoadingCovers } = useGetCoverCollection({
     type: "pid",
     identifiers: [getAllWorkPids(work).join(", ")],
     sizes: [
@@ -56,7 +56,9 @@ const WorkCard = ({ work }: WorkCardProps) => {
   const lowResCover = getLowResCoverUrl(dataCovers)
 
   return (
-    <Link className="block space-y-3 lg:space-y-5" href={resolveWorkUrl(work.workId)}>
+    <Link
+      className="block space-y-3 lg:space-y-5"
+      href={resolveUrl({ type: "work", routeParams: { id: work.workId } })}>
       <div>
         <div
           key={work.workId}
@@ -67,11 +69,13 @@ const WorkCard = ({ work }: WorkCardProps) => {
             </Badge>
           )}
           <div className="relative mx-auto flex h-full w-full items-center">
-            <WorkCardImage
-              lowResSrc={lowResCover || ""}
-              src={coverSrc?.[0] || ""}
-              alt="work image"
-            />
+            {!isLoadingCovers && (
+              <WorkCardImage
+                lowResSrc={lowResCover || ""}
+                src={coverSrc?.[0] || ""}
+                alt={`${work.titles.full[0]} cover billede`}
+              />
+            )}
           </div>
           <div className="my-auto flex min-h-[15%] items-center py-3 md:py-4">
             <WorkCardAvailabilityRow materialTypes={work.materialTypes} />
