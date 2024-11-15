@@ -17,13 +17,22 @@ export async function GET(request: NextRequest) {
   const session = await getSession()
   const config = await getUniloginClientConfig()
   const currentUrl = new URL(request.url)
+  const appUrl = goConfig("app.url")
+  const redirect_uri = `${appUrl}/auth/callback/unilogin`
 
   // Fetch all user/token info.
   try {
-    const tokenSetResponse = await client.authorizationCodeGrant(config, currentUrl, {
-      pkceCodeVerifier: session.code_verifier,
-      idTokenExpected: true,
-    })
+    const tokenSetResponse = await client.authorizationCodeGrant(
+      config,
+      currentUrl,
+      {
+        pkceCodeVerifier: session.code_verifier,
+        idTokenExpected: true,
+      },
+      {
+        redirect_uri,
+      }
+    )
 
     const tokenSet = schemas.tokenSet.parse(tokenSetResponse) as TTokenSet
 
