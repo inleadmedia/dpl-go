@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server"
 import * as client from "openid-client"
 
 import goConfig from "@/lib/config/config"
@@ -12,15 +13,14 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
   institutionIds: string
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await getSession()
   const config = await getUniloginClientConfig()
   const appUrl = goConfig<string>("app.url")
-  const currentUrl = new URL(`${appUrl}/auth/callback/unilogin`)
 
   // Fetch all user/token info.
   try {
-    const tokenSetResponse = await client.authorizationCodeGrant(config, currentUrl, {
+    const tokenSetResponse = await client.authorizationCodeGrant(config, request, {
       pkceCodeVerifier: session.code_verifier,
       idTokenExpected: true,
     })
