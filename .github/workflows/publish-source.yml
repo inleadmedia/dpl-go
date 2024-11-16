@@ -9,37 +9,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Run typescript compile check
-        run: |
-          npx tsc --noEmit
-          if [ $? -ne 0 ]; then
-            echo "TypeScript compilation failed"
-            exit 1
-          fi
-
-      - name: Lint Javascripts
-        run: |
-          yarn lint
-          if [ $? -ne 0 ]; then
-            echo "Linting failed"
-            exit 1
-          fi
-
-      - name: Check Prettier formatting
-        run: |
-          yarn run format:check
-          if [ $? -ne 0 ]; then
-            echo "Prettier formatting check failed"
-            exit 1
-          fi
-
       # Validate the format of the tag. We only want to react on a precise pattern.
       - name: Detect release tag
         id: detect_tag
@@ -50,6 +19,43 @@ jobs:
           else
             echo ::set-output name=IS_RELEASE_TAG::false
           fi
+
+      - uses: actions/setup-node@v4
+        if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
+        run: yarn install --frozen-lockfile
+
+      - name: Run typescript compile check
+        if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
+        run: |
+          npx tsc --noEmit
+          if [ $? -ne 0 ]; then
+            echo "TypeScript compilation failed"
+            exit 1
+          fi
+
+      - name: Lint Javascripts
+        if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
+        run: |
+          yarn lint
+          if [ $? -ne 0 ]; then
+            echo "Linting failed"
+            exit 1
+          fi
+
+      - name: Check Prettier formatting
+        if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
+        run: |
+          yarn run format:check
+          if [ $? -ne 0 ]; then
+            echo "Prettier formatting check failed"
+            exit 1
+          fi
+
       # Extract version from tag.
       - name: Get version
         id: get_version
