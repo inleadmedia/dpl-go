@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --production
 
       - name: Run typescript compile check
         if: ${{ steps.detect_tag.outputs.IS_RELEASE_TAG == 'true' }}
