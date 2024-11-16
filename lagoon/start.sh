@@ -11,5 +11,9 @@
 cd /app
 # TODO: Remember to adjust the following line before deploying to production.
 # Using `yarn start:with-server-source-maps` is probably adding a performance overhead.
-yarn build && yarn start:with-server-source-maps
+# yarn build && yarn start:with-server-source-maps
+
+# Source maps seems to cause permission issues in the Lagoon environment right now.
+# Need to investigate further.
+yarn build && yarn start
 exit 0;
