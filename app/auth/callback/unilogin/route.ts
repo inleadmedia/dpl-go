@@ -16,7 +16,6 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
 export async function GET(request: NextRequest) {
   const session = await getSession()
   const config = await getUniloginClientConfig()
-  const appUrl = goConfig<string>("app.url")
 
   // Fetch all user/token info.
   try {
