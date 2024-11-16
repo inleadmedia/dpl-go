@@ -79,3 +79,7 @@ jobs:
         env:
           CR_PAT: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ steps.get_version.outputs.RELEASE_TAG }}
+
+      - name: Adding summary
+        run: |
+          echo "Source image was successfully build (version: ${{ github.ref }}) 🚀😎" >> $GITHUB_STEP_SUMMARY
