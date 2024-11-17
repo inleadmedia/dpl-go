@@ -1,3 +1,4 @@
+import ky from "ky"
 import { NextRequest } from "next/server"
 import * as client from "openid-client"
 
@@ -18,8 +19,32 @@ export async function GET(request: NextRequest) {
   const config = await getUniloginClientConfig()
   const currentUrl = new URL(request.nextUrl.href)
 
-  // eslint-disable-next-line no-console
-  console.log("currentUrl URL: ", currentUrl)
+  // Debugging Oauth requests.
+  // TODO: Remove this later.
+  const logRequest = (request: Request) => {
+    // eslint-disable-next-line no-console
+    console.log("Request URL: ", request.url.toString())
+    // eslint-disable-next-line no-console
+    console.log("Request Method: ", request.method)
+    // eslint-disable-next-line no-console
+    console.log("Request Body: ", request)
+    // eslint-disable-next-line no-console
+
+    console.log("-".repeat(100))
+  }
+
+  config[client.customFetch] = (...args) =>
+    ky(args[0], {
+      ...args[1],
+      hooks: {
+        beforeRequest: [
+          request => {
+            logRequest(request)
+          },
+        ],
+      },
+    })
+
   // Fetch all user/token info.
   try {
     const tokenSetResponse = await client.authorizationCodeGrant(config, currentUrl, {
