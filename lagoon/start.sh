@@ -13,6 +13,10 @@ cd /app
 # Using `yarn start:with-server-source-maps` is probably adding a performance overhead.
 # yarn build && yarn start:with-server-source-maps
 
+# Debug
+whoami
+ls -lah .next
+
 # Source maps seems to cause permission issues in the Lagoon environment right now.
 # Need to investigate further.
 yarn build && yarn start
