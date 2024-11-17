@@ -22,8 +22,11 @@ RUN adduser --system --uid 1001 nextjs nodejs
 COPY --from=builder /app .
 
 # Set the correct permission for prerender cache
-RUN mkdir -p .next
-RUN chown -R nextjs:nodejs .next
+RUN mkdir -p /app/.next
+RUN chown -R nextjs:nodejs /app/.next
+
+# Deperate action I know
+RUN chmod -R 777 /app/.next
 
 RUN mkdir -p /tmp/.yarn-cache
 RUN chown -R nextjs:nodejs /tmp/.yarn-cache

@@ -14,7 +14,7 @@ cd /app
 # yarn build && yarn start:with-server-source-maps
 
 # Debug
-whoami
+id
 ls -lah .next
 
 # Source maps seems to cause permission issues in the Lagoon environment right now.
