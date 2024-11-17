@@ -16,10 +16,13 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
 export async function GET(request: NextRequest) {
   const session = await getSession()
   const config = await getUniloginClientConfig()
+  const currentUrl = new URL(request.nextUrl.href)
 
+  // eslint-disable-next-line no-console
+  console.log("currentUrl URL: ", currentUrl)
   // Fetch all user/token info.
   try {
-    const tokenSetResponse = await client.authorizationCodeGrant(config, request, {
+    const tokenSetResponse = await client.authorizationCodeGrant(config, currentUrl, {
       pkceCodeVerifier: session.code_verifier,
       idTokenExpected: true,
     })
