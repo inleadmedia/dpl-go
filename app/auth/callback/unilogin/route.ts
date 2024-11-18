@@ -1,5 +1,4 @@
 import { sealData } from "iron-session"
-import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import * as client from "openid-client"
 
@@ -87,13 +86,13 @@ export async function GET(request: NextRequest) {
     session.type = "unilogin"
 
     // eslint-disable-next-line no-console
-    console.log("Debug line 88")
+    console.log("Debug line 90")
 
     // Set token info.
     setTokensOnSession(session, tokenSet)
 
     // eslint-disable-next-line no-console
-    console.log("Debug line 94")
+    console.log("Debug line 96")
 
     // Set user info.
     session.userInfo = {
@@ -103,21 +102,12 @@ export async function GET(request: NextRequest) {
     }
 
     // eslint-disable-next-line no-console
-    console.log("Debug line 104")
+    console.log("Debug line 106")
 
     // await session.save()
 
-    const sealed = await sealData(
-      {
-        ...session,
-      },
-      sessionOptions
-    )
-
-    cookies().set(sessionOptions.cookieName, sealed)
-
     // eslint-disable-next-line no-console
-    console.log("Debug line 109")
+    console.log("Debug line 111")
 
     // return NextResponse.redirect(`${goConfig("app.url")}/user/profile`)
   } catch (error) {
@@ -125,8 +115,24 @@ export async function GET(request: NextRequest) {
     // TODO: Error page or redirect to login page.
     // return NextResponse.redirect(goConfig("app.url"))
   }
-  // eslint-disable-next-line no-console
-  console.log("Debug line 118")
 
-  return NextResponse.redirect(`${goConfig("app.url")}/user/profile`)
+  const sealed = await sealData(
+    {
+      ...session,
+    },
+    sessionOptions
+  )
+
+  // eslint-disable-next-line no-console
+  console.log("Debug line 128")
+
+  const headers = new Headers(request.headers)
+  headers.set(
+    "Set-Cookie",
+    `${sessionOptions.cookieName}=${sealed}; Max-Age=${sessionOptions.ttl}; Path=/; HttpOnly; ${sessionOptions.cookieOptions?.secure && "Secure"}`
+  )
+
+  return NextResponse.redirect(`${goConfig("app.url")}/user/profile`, {
+    headers,
+  })
 }
