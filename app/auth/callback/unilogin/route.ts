@@ -1,9 +1,11 @@
+import { sealData } from "iron-session"
+import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import * as client from "openid-client"
 
 import goConfig from "@/lib/config/config"
 import { getUniloginClientConfig } from "@/lib/session/oauth/uniloginClient"
-import { getSession, setTokensOnSession } from "@/lib/session/session"
+import { getSession, sessionOptions, setTokensOnSession } from "@/lib/session/session"
 import { TTokenSet } from "@/lib/types/session"
 
 import schemas from "./schemas"
@@ -103,7 +105,16 @@ export async function GET(request: NextRequest) {
     // eslint-disable-next-line no-console
     console.log("Debug line 104")
 
-    await session.save()
+    // await session.save()
+
+    const sealed = await sealData(
+      {
+        ...session,
+      },
+      sessionOptions
+    )
+
+    cookies().set(sessionOptions.cookieName, sealed)
 
     // eslint-disable-next-line no-console
     console.log("Debug line 109")
@@ -116,5 +127,6 @@ export async function GET(request: NextRequest) {
   }
   // eslint-disable-next-line no-console
   console.log("Debug line 118")
+
   return NextResponse.redirect(`${goConfig("app.url")}/user/profile`)
 }
