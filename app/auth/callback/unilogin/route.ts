@@ -3,7 +3,7 @@ import * as client from "openid-client"
 
 import goConfig from "@/lib/config/config"
 import { getUniloginClientConfig } from "@/lib/session/oauth/uniloginClient"
-import { getSession, setTokensOnSession } from "@/lib/session/session"
+import { getSession } from "@/lib/session/session"
 import { TTokenSet } from "@/lib/types/session"
 
 import schemas from "./schemas"
@@ -72,38 +72,39 @@ export async function GET(request: NextRequest) {
       config,
       tokenSet.access_token!
     )) as TIntrospectionResponse
-    const introspect = schemas.introspect.parse(introspectResponse)
+    // const introspect = schemas.introspect.parse(introspectResponse)
 
     const claims = tokenSetResponse.claims()!
 
     // UserInfo Request
-    const userInfoResponse = await client.fetchUserInfo(config, tokenSet.access_token, claims.sub)
-    const userinfo = schemas.userInfo.parse(userInfoResponse)
+    // const userInfoResponse = await client.fetchUserInfo(config, tokenSet.access_token, claims.sub)
+    await client.fetchUserInfo(config, tokenSet.access_token, claims.sub)
+    // const userinfo = schemas.userInfo.parse(userInfoResponse)
 
     // Set basic session info.
-    session.isLoggedIn = true
-    session.type = "unilogin"
+    // session.isLoggedIn = true
+    // session.type = "unilogin"
 
     // eslint-disable-next-line no-console
     console.log("Debug line 88")
 
     // Set token info.
-    setTokensOnSession(session, tokenSet)
+    // setTokensOnSession(session, tokenSet)
 
     // eslint-disable-next-line no-console
     console.log("Debug line 94")
 
     // Set user info.
-    session.userInfo = {
-      sub: userinfo.sub,
-      uniid: introspect.uniid,
-      institutionIds: introspect.institutionIds,
-    }
+    // session.userInfo = {
+    //   sub: userinfo.sub,
+    //   uniid: introspect.uniid,
+    //   institutionIds: introspect.institutionIds,
+    // }
 
     // eslint-disable-next-line no-console
     console.log("Debug line 104")
 
-    await session.save()
+    // await session.save()
 
     // eslint-disable-next-line no-console
     console.log("Debug line 109")
