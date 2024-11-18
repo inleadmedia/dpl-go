@@ -81,29 +81,29 @@ export async function GET(request: NextRequest) {
     const userinfo = schemas.userInfo.parse(userInfoResponse)
 
     // Set basic session info.
-    session.isLoggedIn = true
-    session.type = "unilogin"
+    // session.isLoggedIn = true
+    // session.type = "unilogin"
 
     // eslint-disable-next-line no-console
     console.log("Debug line 88")
 
     // Set token info.
-    setTokensOnSession(session, tokenSet)
+    // setTokensOnSession(session, tokenSet)
 
     // eslint-disable-next-line no-console
     console.log("Debug line 94")
 
     // Set user info.
-    session.userInfo = {
-      sub: userinfo.sub,
-      uniid: introspect.uniid,
-      institutionIds: introspect.institutionIds,
-    }
+    // session.userInfo = {
+    //   sub: userinfo.sub,
+    //   uniid: introspect.uniid,
+    //   institutionIds: introspect.institutionIds,
+    // }
 
     // eslint-disable-next-line no-console
     console.log("Debug line 104")
 
-    await session.save()
+    // await session.save()
 
     // eslint-disable-next-line no-console
     console.log("Debug line 109")
