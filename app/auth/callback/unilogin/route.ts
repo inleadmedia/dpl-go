@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import * as client from "openid-client"
 
 import goConfig from "@/lib/config/config"
@@ -108,10 +108,10 @@ export async function GET(request: NextRequest) {
     // eslint-disable-next-line no-console
     console.log("Debug line 109")
 
-    return Response.redirect(`${goConfig("app.url")}/user/profile`)
+    return NextResponse.redirect(`${goConfig("app.url")}/user/profile`)
   } catch (error) {
     console.error(error)
     // TODO: Error page or redirect to login page.
-    return Response.redirect(goConfig("app.url"))
+    return NextResponse.redirect(goConfig("app.url"))
   }
 }
