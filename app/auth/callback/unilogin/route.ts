@@ -13,8 +13,8 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
   institutionIds: string
 }
 
-export async function GET(request: NextRequest, response: NextResponse) {
-  const session = await getSession({ request, response })
+export async function GET(request: NextRequest) {
+  const session = await getSession({ request, response: NextResponse.next() })
   const config = await getUniloginClientConfig()
   const currentSearchParams = request.nextUrl.searchParams
   const appUrl = goConfig("app.url")
@@ -116,5 +116,5 @@ export async function GET(request: NextRequest, response: NextResponse) {
   }
   // eslint-disable-next-line no-console
   console.log("Debug line 118")
-  return Response.redirect(goConfig("app.url"))
+  return NextResponse.redirect(`${goConfig("app.url")}/user/profile`)
 }
