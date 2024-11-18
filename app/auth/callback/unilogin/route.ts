@@ -16,8 +16,15 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
 export async function GET(request: NextRequest) {
   const session = await getSession()
   const config = await getUniloginClientConfig()
-  const currentUrl = new URL(request.nextUrl.href)
+  const currentSearchParams = request.nextUrl.searchParams
+  const appUrl = goConfig("app.url")
+  const redirectUri = new URL(`${appUrl}/auth/callback/unilogin`)
+  currentSearchParams.forEach((value, key) => {
+    redirectUri.searchParams.append(key, value)
+  })
 
+  // eslint-disable-next-line no-console
+  console.log("redirectUri: ", redirectUri)
   // Debugging Oauth requests.
   // TODO: Remove this later.
   // const logRequest = (request: Request) => {
@@ -54,7 +61,7 @@ export async function GET(request: NextRequest) {
 
   // Fetch all user/token info.
   try {
-    const tokenSetResponse = await client.authorizationCodeGrant(config, currentUrl, {
+    const tokenSetResponse = await client.authorizationCodeGrant(config, redirectUri, {
       pkceCodeVerifier: session.code_verifier,
       idTokenExpected: true,
     })
