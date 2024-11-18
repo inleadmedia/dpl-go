@@ -114,6 +114,7 @@ export async function GET(request: NextRequest) {
     // TODO: Error page or redirect to login page.
     // return NextResponse.redirect(goConfig("app.url"))
   }
-
-  return Response.redirect(`${goConfig("app.url")}/user/profile`)
+  // eslint-disable-next-line no-console
+  console.log("Debug line 118")
+  return Response.redirect(goConfig("app.url"))
 }
