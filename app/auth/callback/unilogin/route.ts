@@ -84,8 +84,14 @@ export async function GET(request: NextRequest) {
     session.isLoggedIn = true
     session.type = "unilogin"
 
+    // eslint-disable-next-line no-console
+    console.log("Debug line 88")
+
     // Set token info.
     setTokensOnSession(session, tokenSet)
+
+    // eslint-disable-next-line no-console
+    console.log("Debug line 94")
 
     // Set user info.
     session.userInfo = {
@@ -94,9 +100,15 @@ export async function GET(request: NextRequest) {
       institutionIds: introspect.institutionIds,
     }
 
+    // eslint-disable-next-line no-console
+    console.log("Debug line 104")
+
     await session.save()
 
-    return Response.redirect(uniloginClientSettings.post_login_route)
+    // eslint-disable-next-line no-console
+    console.log("Debug line 109")
+
+    return Response.redirect(`${goConfig("app.url")}/user/profile`)
   } catch (error) {
     console.error(error)
     // TODO: Error page or redirect to login page.
