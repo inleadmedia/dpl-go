@@ -2,9 +2,7 @@ import { revalidatePath, revalidateTag } from "next/cache"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
-// const paramsSchema = z.object({
-//   type: z.union([z.literal("tag"), z.literal("path")]),
-// })
+import goConfig from "@/lib/config/goConfig"
 
 const paramsSchema = z.union([
   z.object({
@@ -18,6 +16,13 @@ const paramsSchema = z.union([
 ])
 
 export async function POST(request: NextRequest) {
+  const secret = goConfig("cache.revalidate.secret")
+  const authToken = (request.headers.get("authorization") ?? "").split("Bearer ").at(1)
+
+  if (!authToken || authToken !== secret) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 401 })
+  }
+
   const body = await request.json()
   try {
     const params = paramsSchema.parse(body)
@@ -37,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ params })
   } catch (e) {
-    // console.log("ze error", e)
+    // TODO: Error logging
     return NextResponse.json({ error: "Wrong input" }, { status: 422 })
   }
 }

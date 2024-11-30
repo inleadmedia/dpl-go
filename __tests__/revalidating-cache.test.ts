@@ -19,6 +19,41 @@ beforeEach(() => {
   revalidateTag.mockReturnValue(true)
 })
 
+describe("Revalidate cache test access via bearer token", () => {
+  test("That the cache revalidation endpoint returns 401 if no bearer token is provided", async () => {
+    await testApiHandler({
+      appHandler: revalidateCacheHandler,
+      url: `/cache/revalidate`,
+      async test({ fetch }) {
+        const res = await fetch({
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "tag", tags: ["tag1", "tag2"] }),
+        })
+        expect(res.status).toBe(401)
+      },
+    })
+  })
+
+  test("That the cache revalidation endpoint returns 200 if a valid bearer token is provided", async () => {
+    await testApiHandler({
+      appHandler: revalidateCacheHandler,
+      url: `/cache/revalidate`,
+      async test({ fetch }) {
+        const res = await fetch({
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
+          body: JSON.stringify({ type: "tag", tags: ["tag1", "tag2"] }),
+        })
+        expect(res.status).toBe(200)
+      },
+    })
+  })
+})
+
 describe("Revalidate cache test combination of payloads", () => {
   test("That the cache revalidation endpoint returns 422 upon wrong input", async () => {
     await testApiHandler({
@@ -27,7 +62,10 @@ describe("Revalidate cache test combination of payloads", () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "unknown-type" }),
         })
         expect(res.status).toBe(422)
@@ -40,7 +78,10 @@ describe("Revalidate cache test combination of payloads", () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "tag", theTags: ["tag1", "tag2"] }),
         })
         expect(res.status).toBe(422)
@@ -55,7 +96,10 @@ describe("Revalidate cache test combination of payloads", () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "tag", tags: ["tag1", "tag2"] }),
         })
         expect(res.status).toBe(200)
@@ -70,7 +114,10 @@ describe("Revalidate cache test combination of payloads", () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "path", paths: ["/some/path", "/some/path"] }),
         })
         expect(res.status).toBe(200)
@@ -87,7 +134,10 @@ describe("Revalidate cache test different path and tag formats", async () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "path", paths: ["some/path", "/some/path"] }),
         })
         expect(res.status).toBe(422)
@@ -101,7 +151,10 @@ describe("Revalidate cache test different path and tag formats", async () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "path", paths: ["/some/*path", "/some/path"] }),
         })
         expect(res.status).toBe(422)
@@ -115,7 +168,10 @@ describe("Revalidate cache test different path and tag formats", async () => {
       async test({ fetch }) {
         const res = await fetch({
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer i9yUwqwgVLfvQ+4f8TnNRZcmHOYOKuUOTpZraUIWUCc=",
+          },
           body: JSON.stringify({ type: "tag", paths: ["!wrong-tag", "another tag"] }),
         })
         expect(res.status).toBe(422)
