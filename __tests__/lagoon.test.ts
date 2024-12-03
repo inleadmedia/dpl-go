@@ -6,12 +6,12 @@ import { getLagoonUrl } from "@/lib/helpers/lagoon"
 describe("Lagoon test suite", () => {
   test("That we can get the node url from Lagoon", async () => {
     const url = getLagoonUrl("node")
-    expect(url).toBe("https://node.acme.com")
+    expect(url).toBe("https://node.pr-1707.dpl-cms.dplplat01.dpl.reload.dk")
   })
 
   test("That we can get the varnish url from Lagoon", async () => {
     const url = getLagoonUrl("varnish")
-    expect(url).toBe("https://varnish.acme.com")
+    expect(url).toBe("https://varnish.pr-1707.dpl-cms.dplplat01.dpl.reload.dk")
   })
 
   test("That we get undefined if the asked url type does NOT exist", async () => {
