@@ -5,9 +5,6 @@ const app = {
     if (process.env.NEXT_PUBLIC_APP_URL) {
       return process.env.NEXT_PUBLIC_APP_URL
     }
-    if (process.env.NEXT_PUBLIC_LAGOON_ROUTES) {
-      return getLagoonUrl("node")
-    }
   },
 }
 

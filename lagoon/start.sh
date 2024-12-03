@@ -7,6 +7,9 @@
 # 	cd /app
 # 	npm run dev
 # fi
+
+source set-env-variables.sh
+
 printenv
 
 cd /app
