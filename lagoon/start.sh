@@ -7,7 +7,10 @@
 # 	cd /app
 # 	npm run dev
 # fi
-printenv
+
+source /app/lagoon/set-env-variables.sh
+
+echo "07:06"
 
 cd /app
 # TODO: Remember to adjust the following line before deploying to production.
