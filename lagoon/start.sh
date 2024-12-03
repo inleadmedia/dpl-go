@@ -7,6 +7,7 @@
 # 	cd /app
 # 	npm run dev
 # fi
+printenv
 
 cd /app
 # TODO: Remember to adjust the following line before deploying to production.
