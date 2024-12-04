@@ -3,7 +3,7 @@ getLagoonUrl() {
     local type=$1
     IFS=',' read -r -a routes <<< "$LAGOON_ROUTES"
     for route in "${routes[@]}"; do
-      if [[ $route == *"$type"* ]]; then
+      if [ "${route#*$type}" != "$route" ]; then
         echo "$route"
         return
       fi
