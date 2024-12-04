@@ -1,14 +1,13 @@
-
 getLagoonUrl() {
-    local type=$1
-    IFS=',' read -r -a routes <<< "$LAGOON_ROUTES"
-    for route in "${routes[@]}"; do
-      if [[ $route == *"$type"* ]]; then
-        echo "$route"
-        return
-      fi
-    done
-  }
+  local type=$1
+
+  for route in ${LAGOON_ROUTES//,/ }; do
+    if echo "$route" | grep -q "$type"; then
+      echo "$route"
+      return
+    fi
+  done
+}
 
 # Make sure app.url is set in application
 app_url=$(getLagoonUrl node)
@@ -23,7 +22,6 @@ if [ -z "$cms_url" ]; then
   echo "Error: Unable to determine CMS URL"
   exit 1
 fi
-
 
 export NEXT_PUBLIC_APP_URL="$app_url"
 export NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS="$cms_url/graphql"
