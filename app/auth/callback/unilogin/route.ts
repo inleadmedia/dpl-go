@@ -1,4 +1,4 @@
-// import { sealData } from "iron-session"
+import { sealData } from "iron-session"
 import { NextRequest, NextResponse } from "next/server"
 import * as client from "openid-client"
 
@@ -81,12 +81,12 @@ export async function GET(request: NextRequest) {
     // return NextResponse.redirect(goConfig("app.url"))
   }
 
-  // const sealed = await sealData(
-  //   {
-  //     ...session,
-  //   },
-  //   sessionOptions
-  // )
+  const sealed = await sealData(
+    {
+      ...session,
+    },
+    sessionOptions
+  )
 
   // TODO: When we have verified that it works in Lagoon
   // then see if we can use the session.save() instead of the "handmade" cookie here.
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
   const headers = new Headers(request.headers)
   headers.set(
     "Set-Cookie",
-    `${sessionOptions.cookieName}=john; Max-Age=${sessionOptions.ttl}; Path=/; HttpOnly; ${sessionOptions.cookieOptions?.secure && "Secure"}`
+    `${sessionOptions.cookieName}=${sealed}; Max-Age=${sessionOptions.ttl}; Path=/; HttpOnly; ${sessionOptions.cookieOptions?.secure && "Secure"}`
   )
 
   return NextResponse.redirect(`${goConfig("app.url")}/user/profile`, {
