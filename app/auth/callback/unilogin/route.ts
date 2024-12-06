@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
   const headers = new Headers(request.headers)
   headers.set(
     "Set-Cookie",
-    `${sessionOptions.cookieName}=${sealed}; Max-Age=${sessionOptions.ttl}; Path=/; HttpOnly; ${sessionOptions.cookieOptions?.secure && "Secure"}`
+    `${sessionOptions.cookieName}=john; Max-Age=${sessionOptions.ttl}; Path=/; HttpOnly; ${sessionOptions.cookieOptions?.secure && "Secure"}`
   )
 
   return NextResponse.redirect(`${goConfig("app.url")}/user/profile`, {
