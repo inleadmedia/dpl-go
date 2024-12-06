@@ -20,6 +20,8 @@ fi
 
 # Make sure the DPL CMS graphql schema endpoint is set in application
 cms_url=$(getLagoonUrl nginx)
+
+echo "!! cms url: $cms_url"
 if [ -z "$cms_url" ]; then
   echo "Error: Unable to determine CMS URL"
   exit 1
