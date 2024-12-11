@@ -14,7 +14,6 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  Cursor: { input: unknown; output: unknown; }
   Email: { input: unknown; output: unknown; }
   Html: { input: unknown; output: unknown; }
   PhoneNumber: { input: unknown; output: unknown; }
@@ -52,45 +51,6 @@ export type AddressCountry = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** A paginated set of results. */
-export type Connection = {
-  /** The edges of this connection. */
-  edges: Array<Edge>;
-  /** The nodes of the edges of this connection. */
-  nodes: Array<EdgeNode>;
-  /** Information to aid in pagination. */
-  pageInfo: ConnectionPageInfo;
-};
-
-/** Information about the page in a connection. */
-export type ConnectionPageInfo = {
-  __typename?: 'ConnectionPageInfo';
-  /** The cursor for the last element in this page. */
-  endCursor?: Maybe<Scalars['Cursor']['output']>;
-  /** Whether there are more pages in this connection. */
-  hasNextPage: Scalars['Boolean']['output'];
-  /** Whether there are previous pages in this connection. */
-  hasPreviousPage: Scalars['Boolean']['output'];
-  /** The cursor for the first element in this page. */
-  startCursor?: Maybe<Scalars['Cursor']['output']>;
-};
-
-/** Choose how your sorts will occur and on which field. */
-export enum ConnectionSortKeys {
-  /** Sort by creation date */
-  CreatedAt = 'CREATED_AT',
-  /** Sort by promoted status. */
-  Promoted = 'PROMOTED',
-  /** Sort by sticky status. */
-  Sticky = 'STICKY',
-  /** Sort by entity title. */
-  Title = 'TITLE',
-  /** Sort by updated date */
-  UpdatedAt = 'UPDATED_AT',
-  /** Sort by term weight. */
-  Weight = 'WEIGHT'
-}
-
 /** A Date range has a start and an end. */
 export type DateRange = {
   __typename?: 'DateRange';
@@ -117,22 +77,6 @@ export type DateTime = {
 export type DplConfiguration = {
   __typename?: 'DplConfiguration';
   unilogin?: Maybe<UniloginConfiguration>;
-};
-
-/**
- * An edge in a connection.
- * Provides the cursor to fetch data based on the position of the associated
- * node. Specific edge implementations may provide more information about the
- * relationship they represent.
- */
-export type Edge = {
-  cursor: Scalars['Cursor']['output'];
-  node: EdgeNode;
-};
-
-/** This entity is accessible over an Edge connection. */
-export type EdgeNode = {
-  id: Scalars['ID']['output'];
 };
 
 /** A file object to represent an managed file. */
@@ -289,73 +233,6 @@ export type MediaVideo = MediaInterface & {
   status: Scalars['Boolean']['output'];
 };
 
-/** Entity type menu. */
-export type Menu = MenuInterface & {
-  __typename?: 'Menu';
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** The menu items. */
-  items: Array<MenuItem>;
-  /** The menu name. */
-  name: Scalars['String']['output'];
-};
-
-/** List of menus available to load. */
-export enum MenuAvailable {
-  /** Administration */
-  Admin = 'ADMIN',
-  /** Udvikling */
-  Devel = 'DEVEL',
-  /** Main navigation */
-  Main = 'MAIN',
-  /** Tools */
-  Tools = 'TOOLS'
-}
-
-/** Entity type menu. */
-export type MenuInterface = {
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** The menu items. */
-  items: Array<MenuItem>;
-  /** The menu name. */
-  name: Scalars['String']['output'];
-};
-
-/** A menu item defined in the CMS. */
-export type MenuItem = {
-  __typename?: 'MenuItem';
-  /** Attributes of this menu item. */
-  attributes: MenuItemAttributes;
-  /** Child menu items of this menu item. */
-  children: Array<MenuItem>;
-  /** The description of the menu item. */
-  description?: Maybe<Scalars['String']['output']>;
-  /** Whether this menu item is intended to be expanded. */
-  expanded: Scalars['Boolean']['output'];
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** Whether this menu item links to an internal route. */
-  internal: Scalars['Boolean']['output'];
-  /** The language of the menu item. */
-  langcode: Language;
-  /** The route this menu item uses. Route loading can be disabled per menu type. */
-  route?: Maybe<RouteUnion>;
-  /** The title of the menu item. */
-  title: Scalars['String']['output'];
-  /** The URL of the menu item. */
-  url?: Maybe<Scalars['String']['output']>;
-};
-
-/** Menu item options set within the CMS. */
-export type MenuItemAttributes = {
-  __typename?: 'MenuItemAttributes';
-  class?: Maybe<Scalars['String']['output']>;
-};
-
-/** Entity type menu. */
-export type MenuUnion = Menu;
-
 /** The schema's entry-point for mutations. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -364,7 +241,7 @@ export type Mutation = {
 };
 
 /** Brug artikler til nyhedspræget indhold med en begrænset levetid. */
-export type NodeArticle = EdgeNode & NodeInterface & {
+export type NodeArticle = NodeInterface & {
   __typename?: 'NodeArticle';
   /** Bibliotek */
   branch?: Maybe<NodeUnion>;
@@ -417,21 +294,6 @@ export type NodeArticle = EdgeNode & NodeInterface & {
   teaserText?: Maybe<Scalars['String']['output']>;
   /** Titel */
   title: Scalars['String']['output'];
-};
-
-/** A paginated set of results for NodeArticle. */
-export type NodeArticleConnection = Connection & {
-  __typename?: 'NodeArticleConnection';
-  edges: Array<NodeArticleEdge>;
-  nodes: Array<NodeArticle>;
-  pageInfo: ConnectionPageInfo;
-};
-
-/** Edge for NodeArticle. */
-export type NodeArticleEdge = Edge & {
-  __typename?: 'NodeArticleEdge';
-  cursor: Scalars['Cursor']['output'];
-  node: NodeArticle;
 };
 
 /** Entity type node. */
@@ -602,21 +464,6 @@ export type ParagraphContentSliderAutomatic = ParagraphInterface & {
   underlinedTitle?: Maybe<Text>;
 };
 
-/** Link med ikoner. Designet til jpg, jpeg, png, pdf, mp3, mov, mp4, og mpeg filer */
-export type ParagraphFiles = ParagraphInterface & {
-  __typename?: 'ParagraphFiles';
-  /** The time that the Paragraph was created. */
-  created: DateTime;
-  /** Filer */
-  files?: Maybe<Array<MediaUnion>>;
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** The paragraphs entity language code. */
-  langcode: Language;
-  /** Publiceret */
-  status: Scalars['Boolean']['output'];
-};
-
 /** Denne paragraph viser en liste af arrangementer filtreret på kategori, tags og filialer. */
 export type ParagraphFilteredEventList = ParagraphInterface & {
   __typename?: 'ParagraphFilteredEventList';
@@ -658,21 +505,6 @@ export type ParagraphInterface = {
   status: Scalars['Boolean']['output'];
 };
 
-/** Links med ikoner. Designet til interne/eksterne links og links til søgeresultater ␣. */
-export type ParagraphLinks = ParagraphInterface & {
-  __typename?: 'ParagraphLinks';
-  /** The time that the Paragraph was created. */
-  created: DateTime;
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** The paragraphs entity language code. */
-  langcode: Language;
-  /** Link */
-  link: Array<Link>;
-  /** Publiceret */
-  status: Scalars['Boolean']['output'];
-};
-
 /** Dette afsnit vil vise en liste over arrangementer, der er manuelt valgt. */
 export type ParagraphManualEventList = ParagraphInterface & {
   __typename?: 'ParagraphManualEventList';
@@ -688,45 +520,6 @@ export type ParagraphManualEventList = ParagraphInterface & {
   status: Scalars['Boolean']['output'];
   /** Titel */
   title?: Maybe<Scalars['String']['output']>;
-};
-
-/** Entity type paragraph. */
-export type ParagraphMedias = ParagraphInterface & {
-  __typename?: 'ParagraphMedias';
-  /** The time that the Paragraph was created. */
-  created: DateTime;
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** The paragraphs entity language code. */
-  langcode: Language;
-  /** Billeder */
-  medias: Array<MediaUnion>;
-  /** Publiceret */
-  status: Scalars['Boolean']['output'];
-};
-
-/** Denne paragraph bruges til at anbefale et enkelt materiale. */
-export type ParagraphRecommendation = ParagraphInterface & {
-  __typename?: 'ParagraphRecommendation';
-  /** The time that the Paragraph was created. */
-  created: DateTime;
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /**
-   * Dette bestemmer om, et billede skal positioneres til venstre eller højre. <br
-   * />Hvis den ikke er slået til (standardadfærd), placeres billedet til
-   * venstre, hvis den er slået til, placeres billedet til højre.␣
-   */
-  imagePositionRight?: Maybe<Scalars['Boolean']['output']>;
-  /** The paragraphs entity language code. */
-  langcode: Language;
-  /**
-   * Titlen på det anbefalede materiale. Hvis du tilføjer en titel, vil
-   * beskrivelsesteksten af materialet ikke blive autoudfyldt.
-   */
-  recommendationTitle?: Maybe<Text>;
-  /** Publiceret */
-  status: Scalars['Boolean']['output'];
 };
 
 /** En basal, formateret brødtekst */
@@ -745,22 +538,7 @@ export type ParagraphTextBody = ParagraphInterface & {
 };
 
 /** Entity type paragraph. */
-export type ParagraphUnion = ParagraphAccordion | ParagraphBanner | ParagraphBreadcrumbChildren | ParagraphCardGridAutomatic | ParagraphCardGridManual | ParagraphContentSlider | ParagraphContentSliderAutomatic | ParagraphFiles | ParagraphFilteredEventList | ParagraphLinks | ParagraphManualEventList | ParagraphMedias | ParagraphRecommendation | ParagraphTextBody | ParagraphVideo;
-
-/** Indtast URL'en til den video, du vil indlejre. */
-export type ParagraphVideo = ParagraphInterface & {
-  __typename?: 'ParagraphVideo';
-  /** The time that the Paragraph was created. */
-  created: DateTime;
-  /** Indlejr video */
-  embedVideo?: Maybe<MediaUnion>;
-  /** The Universally Unique IDentifier (UUID). */
-  id: Scalars['ID']['output'];
-  /** The paragraphs entity language code. */
-  langcode: Language;
-  /** Publiceret */
-  status: Scalars['Boolean']['output'];
-};
+export type ParagraphUnion = ParagraphAccordion | ParagraphBanner | ParagraphBreadcrumbChildren | ParagraphCardGridAutomatic | ParagraphCardGridManual | ParagraphContentSlider | ParagraphContentSliderAutomatic | ParagraphFilteredEventList | ParagraphManualEventList | ParagraphTextBody;
 
 /** The schema's entry-point for queries. */
 export type Query = {
@@ -769,22 +547,8 @@ export type Query = {
   dplConfiguration?: Maybe<DplConfiguration>;
   /** Schema information. */
   info: SchemaInformation;
-  /** Load a Menu by name. */
-  menu?: Maybe<Menu>;
   /** Load a NodeArticle entity by id */
   nodeArticle?: Maybe<NodeArticle>;
-  /** List of all NodeArticle on the platform. */
-  nodeArticles: NodeArticleConnection;
-  /** Load a ParagraphFiles entity by id */
-  paragraphFiles?: Maybe<ParagraphFiles>;
-  /** Load a ParagraphLinks entity by id */
-  paragraphLinks?: Maybe<ParagraphLinks>;
-  /** Load a ParagraphMedias entity by id */
-  paragraphMedias?: Maybe<ParagraphMedias>;
-  /** Load a ParagraphRecommendation entity by id */
-  paragraphRecommendation?: Maybe<ParagraphRecommendation>;
-  /** Load a ParagraphVideo entity by id */
-  paragraphVideo?: Maybe<ParagraphVideo>;
   /** Load a Route by path. */
   route?: Maybe<RouteUnion>;
   /** NextJs SSG Node Information. */
@@ -793,66 +557,7 @@ export type Query = {
 
 
 /** The schema's entry-point for queries. */
-export type QueryMenuArgs = {
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  name: MenuAvailable;
-};
-
-
-/** The schema's entry-point for queries. */
 export type QueryNodeArticleArgs = {
-  id: Scalars['ID']['input'];
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  revision?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-/** The schema's entry-point for queries. */
-export type QueryNodeArticlesArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  reverse?: InputMaybe<Scalars['Boolean']['input']>;
-  sortKey?: InputMaybe<ConnectionSortKeys>;
-};
-
-
-/** The schema's entry-point for queries. */
-export type QueryParagraphFilesArgs = {
-  id: Scalars['ID']['input'];
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  revision?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-/** The schema's entry-point for queries. */
-export type QueryParagraphLinksArgs = {
-  id: Scalars['ID']['input'];
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  revision?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-/** The schema's entry-point for queries. */
-export type QueryParagraphMediasArgs = {
-  id: Scalars['ID']['input'];
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  revision?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-/** The schema's entry-point for queries. */
-export type QueryParagraphRecommendationArgs = {
-  id: Scalars['ID']['input'];
-  langcode?: InputMaybe<Scalars['String']['input']>;
-  revision?: InputMaybe<Scalars['ID']['input']>;
-};
-
-
-/** The schema's entry-point for queries. */
-export type QueryParagraphVideoArgs = {
   id: Scalars['ID']['input'];
   langcode?: InputMaybe<Scalars['String']['input']>;
   revision?: InputMaybe<Scalars['ID']['input']>;
@@ -1166,22 +871,14 @@ export type GetArticleQueryVariables = Exact<{
 }>;
 
 
-export type GetArticleQuery = { __typename?: 'Query', nodeArticle?: { __typename?: 'NodeArticle', title: string, subtitle?: string | null, paragraphs?: Array<{ __typename: 'ParagraphAccordion' } | { __typename: 'ParagraphBanner' } | { __typename: 'ParagraphBreadcrumbChildren' } | { __typename: 'ParagraphCardGridAutomatic' } | { __typename: 'ParagraphCardGridManual' } | { __typename: 'ParagraphContentSlider' } | { __typename: 'ParagraphContentSliderAutomatic' } | { __typename: 'ParagraphFiles' } | { __typename: 'ParagraphFilteredEventList' } | { __typename: 'ParagraphLinks' } | { __typename: 'ParagraphManualEventList' } | { __typename: 'ParagraphMedias' } | { __typename: 'ParagraphRecommendation' } | { __typename: 'ParagraphTextBody', body?: { __typename?: 'Text', value?: string | null } | null } | { __typename: 'ParagraphVideo' }> | null } | null };
+export type GetArticleQuery = { __typename?: 'Query', nodeArticle?: { __typename?: 'NodeArticle', title: string, subtitle?: string | null, paragraphs?: Array<{ __typename: 'ParagraphAccordion' } | { __typename: 'ParagraphBanner' } | { __typename: 'ParagraphBreadcrumbChildren' } | { __typename: 'ParagraphCardGridAutomatic' } | { __typename: 'ParagraphCardGridManual' } | { __typename: 'ParagraphContentSlider' } | { __typename: 'ParagraphContentSliderAutomatic' } | { __typename: 'ParagraphFilteredEventList' } | { __typename: 'ParagraphManualEventList' } | { __typename: 'ParagraphTextBody', body?: { __typename?: 'Text', value?: string | null } | null }> | null } | null };
 
 export type GetArticleByRouteQueryVariables = Exact<{
   path: Scalars['String']['input'];
 }>;
 
 
-export type GetArticleByRouteQuery = { __typename?: 'Query', route?: { __typename?: 'RouteExternal' } | { __typename?: 'RouteInternal', entity?: { __typename?: 'NodeArticle', title: string, subtitle?: string | null, paragraphs?: Array<{ __typename: 'ParagraphAccordion' } | { __typename: 'ParagraphBanner' } | { __typename: 'ParagraphBreadcrumbChildren' } | { __typename: 'ParagraphCardGridAutomatic' } | { __typename: 'ParagraphCardGridManual' } | { __typename: 'ParagraphContentSlider' } | { __typename: 'ParagraphContentSliderAutomatic' } | { __typename: 'ParagraphFiles' } | { __typename: 'ParagraphFilteredEventList' } | { __typename: 'ParagraphLinks' } | { __typename: 'ParagraphManualEventList' } | { __typename: 'ParagraphMedias' } | { __typename: 'ParagraphRecommendation' } | { __typename: 'ParagraphTextBody', body?: { __typename?: 'Text', value?: string | null } | null } | { __typename: 'ParagraphVideo' }> | null } | null } | { __typename?: 'RouteRedirect' } | null };
-
-export type ExtractArticlesQueryVariables = Exact<{
-  pageSize: Scalars['Int']['input'];
-  cursor?: InputMaybe<Scalars['Cursor']['input']>;
-}>;
-
-
-export type ExtractArticlesQuery = { __typename?: 'Query', nodeArticles: { __typename?: 'NodeArticleConnection', nodes: Array<{ __typename?: 'NodeArticle', id: string, path: string }>, edges: Array<{ __typename?: 'NodeArticleEdge', cursor: unknown }>, pageInfo: { __typename?: 'ConnectionPageInfo', hasNextPage: boolean } } };
+export type GetArticleByRouteQuery = { __typename?: 'Query', route?: { __typename?: 'RouteExternal' } | { __typename?: 'RouteInternal', entity?: { __typename?: 'NodeArticle', title: string, subtitle?: string | null, paragraphs?: Array<{ __typename: 'ParagraphAccordion' } | { __typename: 'ParagraphBanner' } | { __typename: 'ParagraphBreadcrumbChildren' } | { __typename: 'ParagraphCardGridAutomatic' } | { __typename: 'ParagraphCardGridManual' } | { __typename: 'ParagraphContentSlider' } | { __typename: 'ParagraphContentSliderAutomatic' } | { __typename: 'ParagraphFilteredEventList' } | { __typename: 'ParagraphManualEventList' } | { __typename: 'ParagraphTextBody', body?: { __typename?: 'Text', value?: string | null } | null }> | null } | null } | { __typename?: 'RouteRedirect' } | null };
 
 export type GetDplCmsConfigurationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1307,62 +1004,6 @@ useSuspenseGetArticleByRouteQuery.getKey = (variables: GetArticleByRouteQueryVar
 
 
 useGetArticleByRouteQuery.fetcher = (variables: GetArticleByRouteQueryVariables, options?: RequestInit['headers']) => fetcher<GetArticleByRouteQuery, GetArticleByRouteQueryVariables>(GetArticleByRouteDocument, variables, options);
-
-export const ExtractArticlesDocument = `
-    query extractArticles($pageSize: Int!, $cursor: Cursor) {
-  nodeArticles(first: $pageSize, after: $cursor) {
-    nodes {
-      id
-      path
-    }
-    edges {
-      cursor
-    }
-    pageInfo {
-      hasNextPage
-    }
-  }
-}
-    `;
-
-export const useExtractArticlesQuery = <
-      TData = ExtractArticlesQuery,
-      TError = unknown
-    >(
-      variables: ExtractArticlesQueryVariables,
-      options?: Omit<UseQueryOptions<ExtractArticlesQuery, TError, TData>, 'queryKey'> & { queryKey?: UseQueryOptions<ExtractArticlesQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useQuery<ExtractArticlesQuery, TError, TData>(
-      {
-    queryKey: ['extractArticles', variables],
-    queryFn: fetcher<ExtractArticlesQuery, ExtractArticlesQueryVariables>(ExtractArticlesDocument, variables),
-    ...options
-  }
-    )};
-
-useExtractArticlesQuery.getKey = (variables: ExtractArticlesQueryVariables) => ['extractArticles', variables];
-
-export const useSuspenseExtractArticlesQuery = <
-      TData = ExtractArticlesQuery,
-      TError = unknown
-    >(
-      variables: ExtractArticlesQueryVariables,
-      options?: Omit<UseSuspenseQueryOptions<ExtractArticlesQuery, TError, TData>, 'queryKey'> & { queryKey?: UseSuspenseQueryOptions<ExtractArticlesQuery, TError, TData>['queryKey'] }
-    ) => {
-    
-    return useSuspenseQuery<ExtractArticlesQuery, TError, TData>(
-      {
-    queryKey: ['extractArticlesSuspense', variables],
-    queryFn: fetcher<ExtractArticlesQuery, ExtractArticlesQueryVariables>(ExtractArticlesDocument, variables),
-    ...options
-  }
-    )};
-
-useSuspenseExtractArticlesQuery.getKey = (variables: ExtractArticlesQueryVariables) => ['extractArticlesSuspense', variables];
-
-
-useExtractArticlesQuery.fetcher = (variables: ExtractArticlesQueryVariables, options?: RequestInit['headers']) => fetcher<ExtractArticlesQuery, ExtractArticlesQueryVariables>(ExtractArticlesDocument, variables, options);
 
 export const GetDplCmsConfigurationDocument = `
     query getDplCmsConfiguration {
