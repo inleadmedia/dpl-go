@@ -30,11 +30,15 @@ export async function POST(request: NextRequest) {
     switch (params.type) {
       case "tag":
         params.tags.forEach(tag => {
+          // eslint-disable-next-line no-console
+          console.log("Revalidating tag:", tag)
           revalidateTag(tag)
         })
         break
       case "path":
         params.paths.forEach(path => {
+          // eslint-disable-next-line no-console
+          console.log("Revalidating path:", path)
           revalidatePath(path)
         })
         break
@@ -43,6 +47,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ params })
   } catch (e) {
     // TODO: Error logging
+    console.error(e)
     return NextResponse.json({ error: "Wrong input" }, { status: 422 })
   }
 }

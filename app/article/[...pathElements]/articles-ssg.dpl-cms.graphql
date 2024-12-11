@@ -1,0 +1,14 @@
+query extractArticles($pageSize: Int!, $cursor: Cursor) {
+  nodeArticles(first: $pageSize, after: $cursor) {
+    nodes {
+      id
+      path
+    }
+    edges {
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+    }
+  }
+}

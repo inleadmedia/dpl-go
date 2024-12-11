@@ -229,6 +229,12 @@ export type ComplexSearchSuggestion = {
   __typename?: 'ComplexSearchSuggestion';
   /** The suggested term which can be searched for */
   term: Scalars['String']['output'];
+  /**
+   * A unique identifier for tracking user interactions with this suggestion.
+   * It is generated in the response and should be included in subsequent
+   * API calls when this suggestion is selected.
+   */
+  traceId: Scalars['String']['output'];
   /** The type of suggestion */
   type: Scalars['String']['output'];
   /** A work related to the term */
@@ -780,8 +786,12 @@ export type Manifestation = {
   languages?: Maybe<Languages>;
   /** Details about the latest printing of this manifestation */
   latestPrinting?: Maybe<Printing>;
+  /** Identification of the local id of this manifestation */
+  localId?: Maybe<Scalars['String']['output']>;
   /** Tracks on music album, sheet music content, or articles/short stories etc. in this manifestation */
   manifestationParts?: Maybe<ManifestationParts>;
+  /** Field for presenting bibliographic records in MARC format */
+  marc?: Maybe<MarcRecord>;
   /** The type of material of the manifestation based on bibliotek.dk types */
   materialTypes: Array<MaterialType>;
   /** Notes about the manifestation */
@@ -804,6 +814,8 @@ export type Manifestation = {
   review?: Maybe<ManifestationReview>;
   /** Series for this manifestation */
   series: Array<Series>;
+  /** Material that can be identified as sheet music */
+  sheetMusicCategories?: Maybe<SheetMusicCategory>;
   /** Information about on which shelf in the library this manifestation can be found */
   shelfmark?: Maybe<Shelfmark>;
   /** The source of the manifestation, e.g. own library catalogue (Bibliotekskatalog) or online source e.g. Filmstriben, Ebook Central, eReolen Global etc. */
@@ -814,6 +826,12 @@ export type Manifestation = {
   tableOfContents?: Maybe<TableOfContent>;
   /** Different kinds of titles for this work */
   titles: ManifestationTitles;
+  /**
+   * A unique identifier for tracking user interactions with this manifestation.
+   * It is generated in the response and should be included in subsequent
+   * API calls when this manifestation is selected.
+   */
+  traceId: Scalars['String']['output'];
   /** id of the manifestaion unit */
   unit?: Maybe<Unit>;
   /** Universes for this manifestation */
@@ -900,6 +918,33 @@ export type Manifestations = {
   first: Manifestation;
   latest: Manifestation;
   mostRelevant: Array<Manifestation>;
+};
+
+export type Marc = {
+  __typename?: 'Marc';
+  /** Gets the MARC record collection for the given record identifier, containing either standalone or head and/or section and volume records. */
+  getMarcByRecordId?: Maybe<MarcRecord>;
+};
+
+
+export type MarcGetMarcByRecordIdArgs = {
+  recordId: Scalars['String']['input'];
+};
+
+export type MarcRecord = {
+  __typename?: 'MarcRecord';
+  /** The library agency */
+  agencyId: Scalars['String']['output'];
+  /** The bibliographic record identifier */
+  bibliographicRecordId: Scalars['String']['output'];
+  /** The MARC record collection content as marcXchange XML string */
+  content: Scalars['String']['output'];
+  /** The serialization format of the MARC record content. Defaults to 'marcXchange' */
+  contentSerializationFormat: Scalars['String']['output'];
+  /** Flag indicating whether or not the record is deleted */
+  deleted: Scalars['Boolean']['output'];
+  /** The marc record identifier */
+  id: Scalars['String']['output'];
 };
 
 export type MaterialType = {
@@ -1077,6 +1122,14 @@ export type MoodTagRecommendResponse = {
   work: Work;
 };
 
+export type MusicalExercise = {
+  __typename?: 'MusicalExercise';
+  /** The types of instrument 'schools' intended to practise with */
+  display: Array<Scalars['String']['output']>;
+  /** Information whether material is intended for practising and in combination with an instrument */
+  forExercise: Scalars['Boolean']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   elba: ElbaServices;
@@ -1106,6 +1159,7 @@ export enum NoteTypeEnum {
   Dissertation = 'DISSERTATION',
   Edition = 'EDITION',
   EstimatedPlayingTimeForGames = 'ESTIMATED_PLAYING_TIME_FOR_GAMES',
+  ExpectedPublicationDate = 'EXPECTED_PUBLICATION_DATE',
   Frequency = 'FREQUENCY',
   MusicalEnsembleOrCast = 'MUSICAL_ENSEMBLE_OR_CAST',
   NotSpecified = 'NOT_SPECIFIED',
@@ -1214,6 +1268,8 @@ export type Query = {
   localSuggest: LocalSuggestResponse;
   manifestation?: Maybe<Manifestation>;
   manifestations: Array<Maybe<Manifestation>>;
+  /** Field for presenting bibliographic records in MARC format */
+  marc: Marc;
   mood: MoodQueries;
   ors: OrsQuery;
   /** Get recommendations */
@@ -1615,6 +1671,20 @@ export type Setting = SubjectInterface & {
   type: SubjectTypeEnum | '%future added value';
 };
 
+export type SheetMusicCategory = {
+  __typename?: 'SheetMusicCategory';
+  /** The types of chamber music material covers */
+  chamberMusicTypes: Array<Scalars['String']['output']>;
+  /** The types of choir material covers */
+  choirTypes: Array<Scalars['String']['output']>;
+  /** The types of instruments material covers */
+  instruments: Array<Scalars['String']['output']>;
+  /** Material intended to practice with */
+  musicalExercises?: Maybe<MusicalExercise>;
+  /** The types of orchestra material covers */
+  orchestraTypes: Array<Scalars['String']['output']>;
+};
+
 export type Shelfmark = {
   __typename?: 'Shelfmark';
   /** A postfix to the shelfmark, eg. 99.4 Christensen, Inger. f. 1935 */
@@ -1714,6 +1784,12 @@ export type Suggestion = {
   __typename?: 'Suggestion';
   /** The suggested term which can be searched for */
   term: Scalars['String']['output'];
+  /**
+   * A unique identifier for tracking user interactions with this suggestion.
+   * It is generated in the response and should be included in subsequent
+   * API calls when this suggestion is selected.
+   */
+  traceId: Scalars['String']['output'];
   /** The type of suggestion: creator, subject or title */
   type: SuggestionTypeEnum | '%future added value';
   /** A work related to the term */
@@ -1866,6 +1942,8 @@ export type Work = {
   mainLanguages: Array<Language>;
   /** Details about the manifestations of this work */
   manifestations: Manifestations;
+  /** Field for presenting bibliographic records in MARC format */
+  marc?: Maybe<MarcRecord>;
   /** The type of material of the manifestation based on bibliotek.dk types */
   materialTypes: Array<MaterialType>;
   /** Relations to other manifestations */
@@ -1875,6 +1953,12 @@ export type Work = {
   /** Subjects for this work */
   subjects: SubjectContainer;
   titles: WorkTitles;
+  /**
+   * A unique identifier for tracking user interactions with this work.
+   * It is generated in the response and should be included in subsequent
+   * API calls when this work is selected.
+   */
+  traceId: Scalars['String']['output'];
   /** Literary/movie universes this work is part of, e.g. Wizarding World, Marvel Universe */
   universes: Array<Universe>;
   /** Unique identification of the work based on work-presentation id e.g work-of:870970-basis:54029519 */

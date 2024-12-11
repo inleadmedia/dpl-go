@@ -1,7 +1,7 @@
 export function fetcher<TData, TVariables>(
   query: string,
   variables?: TVariables,
-  options?: RequestInit["headers"]
+  options?: RequestInit | RequestInit["headers"]
 ) {
   const dplCmsGraphqlEndpoint = process.env.NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS
   const dplCmsGraphqlBasicToken = process.env.NEXT_PUBLIC_GRAPHQL_BASIC_TOKEN_DPL_CMS
@@ -10,15 +10,17 @@ export function fetcher<TData, TVariables>(
     throw new Error("Missing DPL CMS GraphQL endpoint or basic token")
   }
 
-  return async (): Promise<TData> => {
+  return async (): Promise<{ data: TData; headers: Headers }> => {
+    // eslint-disable-next-line no-console
+    console.log("I am fetching dpl cms data")
     const res = await fetch(dplCmsGraphqlEndpoint, {
       method: "POST",
       ...{
         headers: {
           "Content-Type": "application/json",
           Authorization: `Basic ${dplCmsGraphqlBasicToken}`,
-          ...options,
         },
+        ...options,
       },
       body: JSON.stringify({ query, variables }),
     })
@@ -31,6 +33,8 @@ export function fetcher<TData, TVariables>(
       throw new Error(message)
     }
 
-    return json.data
+    const responseHeaders = res.headers
+
+    return { data: json.data, headers: responseHeaders }
   }
 }
