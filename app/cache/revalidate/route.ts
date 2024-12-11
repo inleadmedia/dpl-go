@@ -4,6 +4,8 @@ import { z } from "zod"
 
 import goConfig from "@/lib/config/goConfig"
 
+import { resolveRevalidationPath } from "./helper"
+
 const paramsSchema = z.union([
   z.object({
     type: z.literal("tag"),
@@ -12,6 +14,7 @@ const paramsSchema = z.union([
   z.object({
     type: z.literal("path"),
     paths: z.array(z.string().regex(/^\/[a-zA-Z0-9-\/]+$/)),
+    contentType: z.string().optional(),
   }),
 ])
 
@@ -26,7 +29,6 @@ export async function POST(request: NextRequest) {
   const body = await request.json()
   try {
     const params = paramsSchema.parse(body)
-
     switch (params.type) {
       case "tag":
         params.tags.forEach(tag => {
@@ -37,9 +39,12 @@ export async function POST(request: NextRequest) {
         break
       case "path":
         params.paths.forEach(path => {
-          // eslint-disable-next-line no-console
-          console.log("Revalidating path:", path)
-          revalidatePath(path)
+          const pathToRevalidate = resolveRevalidationPath({ path, params })
+          if (pathToRevalidate) {
+            // eslint-disable-next-line no-console
+            console.log("Revalidating path:", pathToRevalidate)
+            revalidatePath(pathToRevalidate)
+          }
         })
         break
     }
