@@ -1,11 +1,3 @@
-import { connection } from "next/server"
-
-import { fetcher } from "@/lib/graphql/fetchers/dpl-cms.fetcher"
-import {
-  GetDplCmsConfigurationDocument,
-  GetDplCmsConfigurationQuery,
-} from "@/lib/graphql/generated/dpl-cms/graphql"
-
 // import {
 //   GetDplCmsConfigurationQuery,
 //   useGetDplCmsConfigurationQuery,
@@ -32,14 +24,7 @@ import {
 // let dplCmsConfigClient = new QueryClient({})
 
 const getDplCmsConfig = async () => {
-  // const result = await queryDplCmsConfig(dplCmsConfigClient)
-  await connection()
-  const result = await fetcher<GetDplCmsConfigurationQuery, undefined>(
-    GetDplCmsConfigurationDocument
-  )()
-  const data: GetDplCmsConfigurationQuery = result.data
-
-  return data
+  return {}
 }
 
 export const getDplCmsUniloginConfig = async () => {
