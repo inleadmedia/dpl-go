@@ -7,9 +7,13 @@ const Page = async (props: { params: Promise<{ pathElements: string[] }> }) => {
 
   const { pathElements } = params
 
-  const path = ["/artikler", ...pathElements].join("/")
+  const path = [...pathElements].join("/")
   const data = await loadArticle(path)
   return <pre>{JSON.stringify(data, null, 2)}</pre>
 }
 
 export default Page
+
+export async function generateStaticParams() {
+  return []
+}
