@@ -9,7 +9,7 @@ import { resolveRevalidationPath } from "./helper"
 const paramsSchema = z.union([
   z.object({
     type: z.literal("tag"),
-    tags: z.array(z.string().regex(/^[a-zA-Z0-9-]+$/)),
+    tags: z.array(z.string().regex(/^[a-zA-Z0-9-:]+$/)),
   }),
   z.object({
     type: z.literal("path"),
