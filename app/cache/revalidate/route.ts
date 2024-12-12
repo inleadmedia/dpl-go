@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ params })
   } catch (e) {
+    console.error(body)
     // TODO: Error logging
     console.error(e)
     return NextResponse.json({ error: "Wrong input" }, { status: 422 })
