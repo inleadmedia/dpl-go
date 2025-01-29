@@ -1,27 +1,29 @@
 import { add, isPast, sub } from "date-fns"
-import { IronSession, SessionOptions, getIronSession } from "iron-session"
+import { IronSession, getIronSession } from "iron-session"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-import goConfig from "../config/goConfig"
-import { isBuildingProduction } from "../helpers/helper.env"
 import { TSessionType, TTokenSet } from "../types/session"
 
-export const sessionOptions: SessionOptions = {
-  // TODO: generate a random password and store it in a secure place
-  password: String(
-    goConfig("service.unilogin.session.secret", {
-      ignoreMissingConfiguration: isBuildingProduction(),
-    })
-  ),
-  cookieName: "go-session",
-  cookieOptions: {
-    // secure only works in `https` environments
-    // if your localhost is not on `https`, then use: `secure: process.env.NODE_ENV === "production"`
-    secure: process.env.NODE_ENV === "production",
-  },
-  // TODO: Decide on the session ttl.
-  ttl: 60 * 60 * 24 * 7, // 1 week
+export const getSessionOptions = async () => {
+  const sessionSecret = process.env.GO_SESSION_SECRET ?? null
+
+  if (!sessionSecret) {
+    console.error("Missing session secret for Unilogin client")
+    return null
+  }
+
+  return {
+    password: sessionSecret,
+    cookieName: "go-session",
+    cookieOptions: {
+      // secure only works in `https` environments
+      // if your localhost is not on `https`, then use: `secure: process.env.NODE_ENV === "production"`
+      secure: process.env.NODE_ENV === "production",
+    },
+    // TODO: Decide on the session ttl.
+    ttl: 60 * 60 * 24 * 7, // 1 week
+  }
 }
 
 export interface TSessionData {
@@ -56,6 +58,11 @@ export async function getSession(options?: {
   request: NextRequest
   response: NextResponse
 }): Promise<IronSession<TSessionData>> {
+  const sessionOptions = await getSessionOptions()
+  if (!sessionOptions) {
+    return defaultSession as IronSession<TSessionData>
+  }
+
   try {
     const session = !options
       ? await getIronSession<TSessionData>(await cookies(), sessionOptions)

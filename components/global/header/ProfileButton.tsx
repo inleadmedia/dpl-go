@@ -55,7 +55,13 @@ function ProfileButton() {
                 Log ind med UNI•Login
               </SheetDescription>
               <div>
-                <Button onClick={() => router.push("/auth/login/unilogin")} ariaLabel="Log ind">
+                <Button
+                  onClick={e => {
+                    e.preventDefault()
+                    window.location.href = "/auth/login/unilogin"
+                    // router.push("/auth/login/unilogin")
+                  }}
+                  ariaLabel="Log ind">
                   LOG IND
                 </Button>
               </div>

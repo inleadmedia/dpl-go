@@ -4,7 +4,7 @@ import * as client from "openid-client"
 
 import goConfig from "@/lib/config/goConfig"
 import { getUniloginClientConfig } from "@/lib/session/oauth/uniloginClient"
-import { getSession, sessionOptions, setTokensOnSession } from "@/lib/session/session"
+import { getSession, getSessionOptions, setTokensOnSession } from "@/lib/session/session"
 import { TTokenSet } from "@/lib/types/session"
 
 import schemas from "./schemas"
@@ -15,11 +15,13 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
 }
 
 export async function GET(request: NextRequest) {
-  const session = await getSession({ request, response: NextResponse.next() })
+  const session = await getSession()
+  console.log("HI SESSION!!!", session)
   const config = await getUniloginClientConfig()
   const appUrl = String(goConfig("app.url"))
+  const sessionOptions = await getSessionOptions()
 
-  if (!config) {
+  if (!config || !sessionOptions) {
     return NextResponse.redirect(appUrl)
   }
 
@@ -41,7 +43,7 @@ export async function GET(request: NextRequest) {
   //   const request = new Request(url, options)
   //   return fetch(request)
   // }
-
+  console.log("code_verifier", session.code_verifier)
   // Fetch all user/token info.
   try {
     const tokenSetResponse = await client.authorizationCodeGrant(config, redirectUri, {
@@ -107,4 +109,4 @@ export async function GET(request: NextRequest) {
   })
 }
 
-export const dynamic = "force-dynamic"
+// export const dynamic = "force-dynamic"

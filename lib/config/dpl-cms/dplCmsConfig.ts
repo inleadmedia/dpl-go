@@ -17,17 +17,32 @@ const queryDplCmsConfig = async (queryClient: QueryClient) => {
   return dplConfiguration ?? null
 }
 
+export const ensureDplCmsConfig = async (queryClient: QueryClient) => {
+  await queryClient.ensureQueryData({
+    queryKey: useGetDplCmsConfigurationQuery.getKey(),
+    queryFn: useGetDplCmsConfigurationQuery.fetcher(),
+    // TODO: Set this when caching strategy is implemented.
+    // Choosing a minute for now.
+    staleTime: 60000,
+  })
+}
+
 // eslint-disable-next-line prefer-const
 let dplCmsConfigClient = new QueryClient({})
 
-const getDplCmsConfig = async () => {
-  const result = await queryDplCmsConfig(dplCmsConfigClient)
-
-  return result
-}
-
 export const getDplCmsUniloginConfig = async () => {
-  const config = await getDplCmsConfig()
+  const config = await queryDplCmsConfig(dplCmsConfigClient)
 
-  return config?.unilogin ?? null
+  return {
+    wellknownUrl: process.env.UNILOGIN_WELLKNOWN_URL
+      ? process.env.UNILOGIN_WELLKNOWN_URL
+      : (config?.unilogin?.unilogin_api_wellknown_url ?? null),
+    clientId: process.env.UNILOGIN_CLIENT_ID
+      ? process.env.UNILOGIN_CLIENT_ID
+      : (config?.unilogin?.unilogin_api_client_id ?? null),
+    clientSecret: process.env.UNILOGIN_CLIENT_SECRET
+      ? process.env.UNILOGIN_WELLKNOWN_URL
+      : (config?.unilogin?.unilogin_api_client_secret ?? null),
+    apiData: config?.unilogin ?? null,
+  }
 }

@@ -19,7 +19,9 @@ export async function GET() {
   const code_challenge_method = "S256"
 
   session.code_verifier = code_verifier
+  await session.save()
 
+  console.log({ session })
   const redirectTo = client.buildAuthorizationUrl(config, {
     redirect_uri,
     scope: "openid",
@@ -27,7 +29,6 @@ export async function GET() {
     code_challenge_method,
   })
 
-  await session.save()
   return Response.redirect(redirectTo)
 }
 
