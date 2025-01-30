@@ -16,7 +16,6 @@ export interface TIntrospectionResponse extends client.IntrospectionResponse {
 
 export async function GET(request: NextRequest) {
   const session = await getSession()
-  console.log("HI SESSION!!!", session)
   const config = await getUniloginClientConfig()
   const appUrl = String(goConfig("app.url"))
   const sessionOptions = await getSessionOptions()
@@ -43,7 +42,7 @@ export async function GET(request: NextRequest) {
   //   const request = new Request(url, options)
   //   return fetch(request)
   // }
-  console.log("code_verifier", session.code_verifier)
+
   // Fetch all user/token info.
   try {
     const tokenSetResponse = await client.authorizationCodeGrant(config, redirectUri, {

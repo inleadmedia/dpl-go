@@ -29,8 +29,6 @@ export async function getUniloginClientConfig() {
     return null
   }
 
-  console.log("Unilogin client config:", { wellknownUrl, clientId, clientSecret, apiData })
-
   return await client.discovery(
     new URL(String(wellknownUrl)),
     clientId as string,
