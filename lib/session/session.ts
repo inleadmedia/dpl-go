@@ -9,7 +9,7 @@ export const getSessionOptions = async () => {
   const sessionSecret = process.env.GO_SESSION_SECRET ?? null
 
   if (!sessionSecret) {
-    console.error("Missing session secret for Unilogin client")
+    console.error("Missing Go session secret")
     return null
   }
 
