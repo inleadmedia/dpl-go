@@ -3,7 +3,7 @@ import { IronSession, getIronSession } from "iron-session"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-import { TSessionType, TTokenSet } from "../types/session"
+import { TSessionType, TUniloginTokenSet } from "../types/session"
 
 export const getSessionOptions = async () => {
   const sessionSecret = process.env.GO_SESSION_SECRET ?? null
@@ -39,6 +39,7 @@ export interface TSessionData {
     uniid: string
     institutionIds: string
   }
+  adgangsplatformenUserToken?: string
   type: TSessionType
 }
 
@@ -51,6 +52,7 @@ export const defaultSession: TSessionData = {
   refresh_expires: undefined,
   code_verifier: undefined,
   userInfo: undefined,
+  adgangsplatformenUserToken: undefined,
   type: "anonymous",
 }
 
@@ -85,9 +87,9 @@ export async function getSession(options?: {
   }
 }
 
-export const setTokensOnSession = async (
+export const setUniloginTokensOnSession = async (
   session: IronSession<TSessionData>,
-  tokenSet: TTokenSet
+  tokenSet: TUniloginTokenSet
 ) => {
   session.access_token = tokenSet.access_token
   session.refresh_token = tokenSet.refresh_token
@@ -102,6 +104,18 @@ export const setTokensOnSession = async (
   // cookies().set("go-session:id_token", tokenSet.id_token)
   const cookieStore = await cookies()
   cookieStore.set("go-session:id_token", tokenSet.id_token)
+}
+
+export const setAdgangsplatformenUserTokenOnSession = async (
+  session: IronSession<TSessionData>,
+  token: string
+) => {
+  session.adgangsplatformenUserToken = token
+  session.expires = add(new Date(), {
+    // Three weeks.
+    // TODO: Get TTL from the tokenSet (API should return it).
+    seconds: 3 * 7 * 24 * 60 * 60,
+  })
 }
 
 export const accessTokenShouldBeRefreshed = (session: IronSession<TSessionData>) => {

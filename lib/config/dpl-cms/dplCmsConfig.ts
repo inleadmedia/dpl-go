@@ -12,6 +12,7 @@ const queryDplCmsConfig = async (queryClient: QueryClient) => {
     // TODO: Set this when caching strategy is implemented.
     // Choosing half a minute for now.
     staleTime: 30000,
+    initialData: {},
   })
 
   return dplConfiguration ?? null

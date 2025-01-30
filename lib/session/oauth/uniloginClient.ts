@@ -12,6 +12,8 @@ export async function getUniloginClientConfig() {
 
   let isMissingConfiguration = false
   // We need all of these to be able to continue.
+  // TODO: Consider if we should throw an error instead of just logging.
+  // Then we would be able to use the error boundary to catch it.
   if (!wellknownUrl) {
     console.error("Missing wellknownUrl for Unilogin client")
     isMissingConfiguration = true
