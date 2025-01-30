@@ -69,7 +69,13 @@ export async function getSession(options?: {
       : await getIronSession<TSessionData>(options.request, options.response, sessionOptions)
 
     if (!session?.isLoggedIn) {
-      Object.assign(session, defaultSession)
+      // Return the default session if the session is not logged in.
+      // But if the session has a code_verifier, we will keep that.
+      // The code_verifier is used for verifying the PKCE challenge
+      // when coming back from Unilogin.
+      return Object.assign(session, defaultSession, {
+        ...(session.code_verifier ? { code_verifier: session.code_verifier } : {}),
+      }) as IronSession<TSessionData>
     }
 
     return session
