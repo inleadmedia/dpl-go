@@ -22,6 +22,12 @@ const nextConfig = {
     })
     return config
   },
+  experimental: {
+    turbotrace: {
+      logLevel: "error",
+      logDetail: false,
+    },
+  },
 }
 
 export default nextConfig
