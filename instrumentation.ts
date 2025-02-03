@@ -1,5 +1,3 @@
-import { QueryClient } from "@tanstack/react-query"
-
 import { ensureDplCmsConfig } from "./lib/config/dpl-cms/dplCmsConfig"
 import getQueryClient from "./lib/getQueryClient"
 

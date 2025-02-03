@@ -12,7 +12,7 @@ const queryDplCmsConfig = async (queryClient: QueryClient) => {
     queryFn: useGetDplCmsConfigurationQuery.fetcher(),
     // TODO: Set this when caching strategy is implemented.
     // Choosing half a minute for now.
-    staleTime: 30000,
+    staleTime: 0,
   })
 
   return dplConfiguration ?? null
@@ -24,7 +24,7 @@ export const ensureDplCmsConfig = async (queryClient: QueryClient) => {
     queryFn: useGetDplCmsConfigurationQuery.fetcher(),
     // TODO: Set this when caching strategy is implemented.
     // Choosing a minute for now.
-    staleTime: 60000,
+    staleTime: 0,
   })
 }
 

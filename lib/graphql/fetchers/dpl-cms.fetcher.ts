@@ -34,7 +34,13 @@ export function fetcher<TData, TVariables>(
       body: JSON.stringify({ query, variables }),
     })
 
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify({ query, variables }))
+
     const json = await res.json()
+
+    // eslint-disable-next-line no-console
+    console.log({ json: json?.data?.dplConfiguration })
 
     if (res.status !== 200) {
       const { message } = json
