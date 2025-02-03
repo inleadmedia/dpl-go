@@ -32,6 +32,5 @@ export NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS="$cms_url/graphql"
 # Go to the app directory if it doesn't exist then never mind.
 cd /app || exit 1
 # TODO: Remember to adjust the following line before deploying to production.
-# Using `yarn start:with-server-source-maps` is probably adding a performance overhead.
-yarn build && yarn start:with-server-source-maps
-exit 0
+# We want to able to debug better so we start the application in development mode.
+yarn build:dev && yarn start:dev
