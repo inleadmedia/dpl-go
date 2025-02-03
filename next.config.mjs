@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    allowDevelopmentBuild: true,
+  },
   images: {
     remotePatterns: [
       {
