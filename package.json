@@ -6,7 +6,6 @@
   "scripts": {
     "build-storybook": "storybook build",
     "build": "next build",
-    "build:dev": "NODE_ENV=development next build",
     "ci-check": "export NODE_ENV=development && yarn typecheck && yarn lint && yarn format:check && yarn test:unit:once",
     "codegen:all-rest-services": "orval",
     "codegen:covers": "rm -rf src/lib/rest/cover-service-api/generated/model/*.* && orval --project coverService",
@@ -19,7 +18,7 @@
     "lint": "next lint",
     "start:with-server-source-maps": "NODE_OPTIONS='--enable-source-maps=true' next start",
     "start": "next start",
-    "start:dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 NODE_ENV=development next start",
+    "start:dev": "NODE_TLS_REJECT_UNAUTHORIZED=0 next start",
     "storybook": "storybook dev -p 6006",
     "test:accessibility": "test-storybook",
     "test:unit:once": "vitest run",
