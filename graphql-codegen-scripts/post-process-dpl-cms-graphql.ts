@@ -12,7 +12,7 @@ if (!pathToGeneratedFile) {
 replaceInFile({
   files: pathToGeneratedFile,
   from: /RequestInit\['headers'\]/g,
-  to: "RequestInit",
+  to: 'RequestInit["headers"] & { next?: NextFetchRequestConfig }',
 })
   .then((results: unknown) => {
     // eslint-disable-next-line no-console

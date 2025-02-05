@@ -18,7 +18,7 @@ const getHeaders = (headers: RequestInit["headers"] | undefined) => {
 export function fetcher<TData, TVariables>(
   query: string,
   variables?: TVariables,
-  options?: RequestInit
+  options?: RequestInit & { next?: NextFetchRequestConfig }
 ) {
   const dplCmsGraphqlEndpoint = process.env.NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS
   const dplCmsGraphqlBasicToken = process.env.NEXT_PUBLIC_GRAPHQL_BASIC_TOKEN_DPL_CMS
