@@ -51,7 +51,7 @@ export function fetcher<TData, TVariables>(
     // TODO: Remove console logs when we are more confident
     // in dpl-cms fetching and caching of data.
     // eslint-disable-next-line no-console
-    console.log({ dplConfiguration: json?.data?.dplConfiguration })
+    console.log({ goConfiguration: json?.data?.goConfiguration })
     // TODO: Remove console logs when we are more confident
     // in dpl-cms fetching and caching of data.
     // eslint-disable-next-line no-console
