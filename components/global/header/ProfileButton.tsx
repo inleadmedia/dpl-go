@@ -84,9 +84,7 @@ function ProfileButton() {
                   <div>
                     <Button
                       theme="primary"
-                      onClick={() =>
-                        router.push(`https://dapple-cms.docker/login?current-path=/go-login`)
-                      }
+                      onClick={() => router.push(adgangsplatformenLoginUrl)}
                       ariaLabel="Log ind med Adgangsplatformen">
                       LOG IND
                     </Button>
