@@ -27,6 +27,7 @@ fi
 # Set the environment variables.
 # These ones are varying from environment to environment.
 export NEXT_PUBLIC_APP_URL="$app_url"
+export NEXT_PUBLIC_URL_DPL_CMS="$cms_url"
 export NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS="$cms_url/graphql"
 
 # Go to the app directory if it doesn't exist then never mind.
