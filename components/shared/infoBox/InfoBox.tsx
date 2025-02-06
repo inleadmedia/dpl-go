@@ -1,7 +1,6 @@
 "use client"
 
 import { motion } from "framer-motion"
-import Link from "next/link"
 import React from "react"
 
 import InfoBoxItem from "@/components/shared/infoBox/InfoBoxItem"
@@ -9,9 +8,9 @@ import {
   ManifestationWorkPageFragment,
   WorkFullWorkPageFragment,
 } from "@/lib/graphql/generated/fbi/graphql"
-import { resolveUrl } from "@/lib/helpers/helper.routes"
 
 import { Button } from "../button/Button"
+import InfoBoxSearchLink from "./InfoBoxSearchLink"
 
 type InfoBoxProps = {
   work: WorkFullWorkPageFragment
@@ -51,14 +50,11 @@ const InfoBox = ({ work, selectedManifestation }: InfoBoxProps) => {
                     return (
                       <div key={index}>
                         {series.numberInSeries && <span>{`${series.numberInSeries} i`} </span>}
-                        <Link
+                        <InfoBoxSearchLink
                           className="animate-text-underline"
-                          href={resolveUrl({
-                            routeParams: { search: "search" },
-                            queryParams: { q: series.title },
-                          })}>
-                          {series.title}
-                        </Link>
+                          q={series.title}
+                          title={series.title}
+                        />
                       </div>
                     )
                   })
@@ -68,13 +64,7 @@ const InfoBox = ({ work, selectedManifestation }: InfoBoxProps) => {
               {uniqueSubjects.length
                 ? uniqueSubjects.map((subject, index) => (
                     <Button key={index} asChild size={"sm"} className="px-3">
-                      <Link
-                        href={resolveUrl({
-                          routeParams: { search: "search" },
-                          queryParams: { q: subject },
-                        })}>
-                        {subject}
-                      </Link>
+                      <InfoBoxSearchLink q={subject} title={subject} />
                     </Button>
                   ))
                 : "-"}
