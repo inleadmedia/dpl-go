@@ -111,7 +111,7 @@ const useSearchMachineActor = () => {
     }
 
     setPreviousPathname(currentPathname)
-  }, [searchParamString, searchQuery, pathname])
+  })
 
   return actor
 }
