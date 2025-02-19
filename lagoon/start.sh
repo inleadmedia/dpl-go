@@ -31,7 +31,10 @@ export NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS="$cms_url/graphql"
 
 # Go to the app directory if it doesn't exist then never mind.
 cd /app || exit 1
-# TODO: Remember to adjust the following line before deploying to production.
-# Using `yarn start:with-server-source-maps` is probably adding a performance overhead.
-yarn build && yarn start:with-server-source-maps
+
+# Vercel does it. So let's try it.
+# https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+ENV NODE_ENV=production
+
+yarn build && yarn start
 exit 0
