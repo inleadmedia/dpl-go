@@ -23,7 +23,7 @@ goCmsUrlPrefix="nginx."
 # Otherwise we are in production and the goUrlPrefix should be "nginx.".
 # @todo IMPORTANT: Change this logic before launch of the GO project
 if [ "$LAGOON_PROJECT" = "dpl-cms" ]; then
-  goCmsUrlPrefix="go-"
+  goCmsUrlPrefix="cms."
 fi
 cms_url=$(getLagoonUrl $goCmsUrlPrefix)
 if [ -z "$cms_url" ]; then
