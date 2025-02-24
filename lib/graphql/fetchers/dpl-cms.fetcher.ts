@@ -32,6 +32,8 @@ export function fetcher<TData, TVariables>(
   if (!dplCmsGraphqlBasicToken) {
     throw new Error("Missing DPL CMS GraphQL basic token")
   }
+  // eslint-disable-next-line no-console
+  console.log({ dplCmsGraphqlEndpoint, dplCmsGraphqlBasicToken })
   const { next, headers } = options || {}
 
   return async (): Promise<TData> => {
@@ -52,7 +54,7 @@ export function fetcher<TData, TVariables>(
     // TODO: Remove console logs when we are more confident
     // in dpl-cms fetching and caching of data.
     // eslint-disable-next-line no-console
-    console.log({ goConfiguration: json?.data?.goConfiguration })
+    console.log({ data: json?.data })
     // TODO: Remove console logs when we are more confident
     // in dpl-cms fetching and caching of data.
     // eslint-disable-next-line no-console
