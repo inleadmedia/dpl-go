@@ -4,7 +4,12 @@ import { withAuth } from "@/app/pubhub/(lib)/helper"
 import { TUserInfo } from "@/app/pubhub/(lib)/types"
 import { transformTimeToUtcString } from "@/app/pubhub/helper"
 
-import { getLibraryUserOrderListRequest } from "./(lib)/requests"
+import {
+  getGroupsRequest,
+  getInstitutionUserRequest,
+  getInstitutionsRequest,
+  getLibraryUserOrderListRequest,
+} from "./(lib)/requests"
 import { libraryUserOrderListSchema } from "./(lib)/schemas"
 import { isOrderItem } from "./(lib)/types"
 
@@ -14,6 +19,7 @@ async function getLibraryUserOrder(request: NextRequest, context: { userInfo: TU
     const orderListResponse = orderListData.response
     const orderItem = orderListResponse.data.orderitem
     const orderItems = isOrderItem(orderItem) ? [orderItem] : orderItem
+
     return {
       loans: orderItems.map(orderItem => {
         return {
@@ -35,6 +41,22 @@ async function getLibraryUserOrder(request: NextRequest, context: { userInfo: TU
 
   try {
     const responseData = await getLibraryUserOrderListRequest(userInfo)
+    const groupResponse = await getGroupsRequest("101047")
+    const groupData = groupResponse ?? []
+    // Debug: groups
+    groupData.forEach(group => {
+      console.log({ test: group })
+    })
+
+    // Debug: institution user (forbidden)
+    const instUserResponse = await getInstitutionUserRequest("101047", userInfo)
+    console.log({ test: instUserResponse })
+
+    // Debug: institutions
+    const institutionsResponse = await getInstitutionsRequest(["101047"], userInfo)
+    const institutionsData = institutionsResponse ?? []
+    console.log({ test: institutionsData })
+
     return NextResponse.json(libraryUserOrderList.parse(responseData))
   } catch (error) {
     console.error(error)
