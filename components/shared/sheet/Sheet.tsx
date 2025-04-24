@@ -4,6 +4,7 @@ import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import * as React from "react"
 
+import { cyKeys } from "@/cypress/support/constants"
 import { cn } from "@/lib/helpers/helper.cn"
 
 const Sheet = SheetPrimitive.Root
@@ -63,7 +64,8 @@ const SheetContent = React.forwardRef<
         ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 sm:right-0 lg:p-8`,
         className
       )}
-      {...props}>
+      {...props}
+      data-cy={cyKeys["global-sheet"]}>
       <SheetPrimitive.Close
         className="focus-visible right-grid-edge top-grid-edge ring-offset-background data-[state=open]:bg-secondary
           absolute rounded-sm transition-opacity hover:cursor-pointer hover:opacity-100
