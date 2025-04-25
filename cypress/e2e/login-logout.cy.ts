@@ -1,5 +1,12 @@
+import getLoginUrls from "../factories/getLoginUrls"
+
 describe("Login / Logout Tests", () => {
   beforeEach(() => {
+    cy.interceptGraphql({
+      operationName: "getLoginUrls",
+      data: getLoginUrls.build(),
+    })
+
     cy.visit("/search")
 
     // Click profile button
@@ -24,6 +31,9 @@ describe("Login / Logout Tests", () => {
 
     // Click UNI•Login button
     cy.dataCy("login-sheet-unilogin-button").click()
+
+    // Check if mocked unilogin page is open
+    cy.location("pathname").should("not.eq", "/search")
   })
 
   it("Should open adgangsplatformen page", () => {
@@ -31,5 +41,8 @@ describe("Login / Logout Tests", () => {
 
     // Click adgangsplatformen button
     cy.dataCy("login-sheet-adgangsplatformen-button").click()
+
+    // Check if mocked adgangsplatformen page is open
+    cy.location("pathname").should("eq", "/some-path")
   })
 })
