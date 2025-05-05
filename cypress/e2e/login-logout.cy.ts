@@ -1,6 +1,6 @@
 import getLoginUrls from "../factories/getLoginUrls"
 
-describe("Login / Logout Tests", () => {
+describe("Login / Logout UI Tests", () => {
   beforeEach(() => {
     cy.interceptGraphql({
       operationName: "getLoginUrls",
@@ -44,5 +44,17 @@ describe("Login / Logout Tests", () => {
 
     // Check if mocked adgangsplatformen page is open
     cy.location("pathname").should("eq", "/some-path")
+  })
+})
+
+describe.only("Login / Logout API Tests", () => {
+  it("Should login when performing unilogin callback", () => {
+    cy.mockServerRest({
+      method: "GET",
+      path: "/auth/callback/unilogin",
+      data: { message: "success" },
+    })
+
+    cy.visit("/auth/callback/unilogin")
   })
 })

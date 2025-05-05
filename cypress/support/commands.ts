@@ -41,9 +41,10 @@ export type MockGraphQLMutationParams = {
 }
 
 export type MockRestResponseParams = {
-  method: "get" | "post" | "put" | "delete" | "patch"
-  url: string
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
+  path: string
   data: object
+  statusCode?: number
 }
 
 declare global {
