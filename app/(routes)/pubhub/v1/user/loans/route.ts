@@ -12,11 +12,22 @@ async function getLibraryUserOrder(request: NextRequest, context: { uniLoginUser
   const { uniLoginUserInfo } = context
   const libraryUserOrderList = libraryUserOrderListSchema.transform(orderListData => {
     const orderListResponse = orderListData.response
-    const orderItem = orderListResponse.data.orderitem
-    const orderItems = isOrderItem(orderItem) ? [orderItem] : orderItem
+    const orderItem = orderListResponse.data?.orderitem
     const libraryData = orderListResponse.status.LibraryExtension
-    return {
-      loans: orderItems.map(orderItem => {
+
+    const data: {
+      code: string
+      message: string
+      loans?: Record<string, unknown>[]
+      libraryData?: Record<string, unknown>
+      userData?: Record<string, unknown>
+    } = {
+      code: orderListResponse.status.code,
+      message: orderListResponse.status.message,
+    }
+    if (orderItem) {
+      const orderItems = isOrderItem(orderItem) ? [orderItem] : orderItem
+      data.loans = orderItems.map(orderItem => {
         return {
           orderId: orderItem.internalordernumber,
           orderDateUtc: transformTimeToUtcString(orderItem.orderdate),
@@ -25,13 +36,15 @@ async function getLibraryUserOrder(request: NextRequest, context: { uniLoginUser
             identifier: orderItem.book.attributes.id,
           },
         }
-      }),
-      libraryData: {
+      })
+    }
+    if (libraryData) {
+      data.libraryData = {
         maxAmountPerMonth: Number(libraryData.maxloanpertime),
         maxConcurrentAudiobookLoansPerBorrower: Number(libraryData.maxloanpertimesound),
         maxConcurrentEbookLoansPerBorrower: Number(libraryData.maxloanpertime),
-      },
-      userData: {
+      }
+      data.userData = {
         totalLoans: Number(libraryData.usertotalloans),
         totalEbookLoans: Number(libraryData.usertotalebookloans),
         totalAudioLoans: Number(libraryData.usertotalsoundloans),
@@ -39,9 +52,16 @@ async function getLibraryUserOrder(request: NextRequest, context: { uniLoginUser
         // There is no direct data field from the SOAP service that gives the remaining amount of audiobooks
         audiobookLoansRemaining:
           Number(libraryData.maxloanpertimesound) - Number(libraryData.usertotalsoundloans),
-        friendlyCardNumber: orderListResponse.data.friendlycardnumber,
-      },
+      }
     }
+    if (orderListResponse.data?.friendlycardnumber) {
+      data.userData = {
+        ...(data.userData ? data.userData : {}),
+        friendlycardnumber: orderListResponse.data.friendlycardnumber,
+      }
+    }
+
+    return data
   })
 
   try {

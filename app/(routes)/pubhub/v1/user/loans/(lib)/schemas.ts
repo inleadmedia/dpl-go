@@ -16,19 +16,25 @@ export const orderItemSchema = z.object({
 export const libraryUserOrderListSchema = z.object({
   response: z.object({
     status: z.object({
-      LibraryExtension: z.object({
-        maxloanpertime: z.string().regex(/^[0-9]+$/),
-        maxloanpertimesound: z.string().regex(/^[0-9]+$/),
-        // userebookloansremain can in some cases be a negative number
-        userebookloansremain: z.string().regex(/^[-–]?[0-9]+$/),
-        usertotalloans: z.string().regex(/^[0-9]+$/),
-        usertotalebookloans: z.string().regex(/^[0-9]+$/),
-        usertotalsoundloans: z.string().regex(/^[0-9]+$/),
-      }),
+      LibraryExtension: z
+        .object({
+          maxloanpertime: z.string().regex(/^[0-9]+$/),
+          maxloanpertimesound: z.string().regex(/^[0-9]+$/),
+          // userebookloansremain can in some cases be a negative number
+          userebookloansremain: z.string().regex(/^[-–]?[0-9]+$/),
+          usertotalloans: z.string().regex(/^[0-9]+$/),
+          usertotalebookloans: z.string().regex(/^[0-9]+$/),
+          usertotalsoundloans: z.string().regex(/^[0-9]+$/),
+        })
+        .optional(),
+      code: z.string(),
+      message: z.string(),
     }),
-    data: z.object({
-      orderitem: orderItemSchema.or(z.array(orderItemSchema)),
-      friendlycardnumber: z.string().optional(),
-    }),
+    data: z
+      .object({
+        orderitem: orderItemSchema.or(z.array(orderItemSchema)),
+        friendlycardnumber: z.string().optional(),
+      })
+      .optional(),
   }),
 })
