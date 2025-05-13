@@ -1,3 +1,4 @@
+import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import React, { Suspense } from "react"
 
@@ -13,7 +14,9 @@ import SupportId, { SupportIdSkeleton } from "./SupportId"
 import Username, { UsernameSkeleton } from "./Username"
 
 const ProfilePageLayout = async () => {
-  const session = await getSession()
+  const cookieStore = await cookies()
+
+  const session = await getSession(cookieStore)
 
   if (userIsAnonymous(session)) {
     redirect("/")

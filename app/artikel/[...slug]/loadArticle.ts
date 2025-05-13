@@ -1,3 +1,5 @@
+import { unstable_cacheTag as cacheTag } from "next/cache"
+
 import getQueryClient from "@/lib/getQueryClient"
 import {
   GetArticleByPathQuery,
@@ -6,14 +8,16 @@ import {
 import { getContentQueryPath } from "@/lib/helpers/dpl-cms-content"
 
 const loadArticle = async (contentPath: string) => {
+  // "use cache"
   const queryClient = getQueryClient()
   const path = getContentQueryPath(contentPath, "article")
 
-  const data = await queryClient.fetchQuery<GetArticleByPathQuery>({
+  const data = (await queryClient.fetchQuery<GetArticleByPathQuery>({
     queryKey: useGetArticleByPathQuery.getKey({ path }),
     queryFn: useGetArticleByPathQuery.fetcher({ path }),
-  })
+  })) as GetArticleByPathQuery & { go: { cacheTags: string } }
 
+  // cacheTag(data.go.cacheTags)
   return data
 }
 

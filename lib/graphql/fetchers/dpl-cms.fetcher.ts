@@ -38,6 +38,12 @@ export function fetcher<TData, TVariables>(
 
   return async (): Promise<TData> => {
     try {
+      console.log("Fetching data from DPL CMS GraphQL endpoint")
+      console.log("dplCmsGraphqlEndpoint:", dplCmsGraphqlEndpoint)
+      console.log("Query:", query)
+      console.log("Variables:", variables)
+      console.log("Headers:", getHeaders(headers))
+      console.log("Next options:", next)
       const res = await fetch(dplCmsGraphqlEndpoint, {
         method: "POST",
         headers: getHeaders(headers),
@@ -56,7 +62,8 @@ export function fetcher<TData, TVariables>(
         }
       }
 
-      return json.data
+      const cacheTagsRaw = res.headers.get("x-dpl-graphql-cache-tags")
+      return { ...json.data, go: { cacheTags: cacheTagsRaw ? cacheTagsRaw.split(" ") : null } }
     } catch (error) {
       throw new Error("Failed to fetch data from DPL CMS", { cause: error })
     }

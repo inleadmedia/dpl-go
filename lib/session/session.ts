@@ -64,13 +64,13 @@ export async function getSession(options?: {
   request: NextRequest
   response: NextResponse
 }): Promise<IronSession<TSessionData>> {
-  const { cookies } = await import("next/headers")
   const sessionOptions = await getSessionOptions()
   if (!sessionOptions) {
     return defaultSession as IronSession<TSessionData>
   }
 
   try {
+    const { cookies } = await import("next/headers")
     const cookieStore = await cookies()
     const libraryToken = cookieStore.get(goConfig("library-token.cookie-name"))?.value
     const session = !options

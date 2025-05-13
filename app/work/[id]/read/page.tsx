@@ -1,11 +1,11 @@
 "use client"
 
 import { notFound, useSearchParams } from "next/navigation"
-import React from "react"
+import React, { Suspense } from "react"
 
 import Reader from "@/components/shared/publizonReader/PublizonReader"
 
-function Page() {
+function WorkPage() {
   const searchParams = useSearchParams()
   const id = searchParams.get("id")
   const orderId = searchParams.get("orderId")
@@ -26,6 +26,14 @@ function Page() {
       {orderId && <Reader onBackCallback={() => handleBack()} type="loan" orderId={orderId} />}
       {id && <Reader onBackCallback={() => handleBack()} type="preview" identifier={id} />}
     </div>
+  )
+}
+
+function Page() {
+  return (
+    <Suspense>
+      <WorkPage />
+    </Suspense>
   )
 }
 

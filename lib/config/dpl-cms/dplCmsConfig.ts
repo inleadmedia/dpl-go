@@ -59,13 +59,28 @@ const dplCmsPublicConfigSchema = z.object({
 export type TDplCmsPublicConfig = z.infer<typeof dplCmsPublicConfigSchema>["public"]
 
 export const getDplCmsPublicConfig = async () => {
-  const queryClient = getQueryClient()
-  const config = await queryClient.fetchQuery<GetDplCmsPublicConfigurationQuery>({
-    queryKey: useGetDplCmsPublicConfigurationQuery.getKey(),
-    queryFn: useGetDplCmsPublicConfigurationQuery.fetcher(),
-    initialData: {},
-    staleTime: 0,
-  })
+  // const queryClient = getQueryClient()
+  // const config = await queryClient.fetchQuery<GetDplCmsPublicConfigurationQuery>({
+  //   queryKey: useGetDplCmsPublicConfigurationQuery.getKey(),
+  //   queryFn: useGetDplCmsPublicConfigurationQuery.fetcher(),
+  //   initialData: {},
+  //   staleTime: 0,
+  // })
 
-  return dplCmsPublicConfigSchema.safeParse(config.goConfiguration).data?.public ?? null
+  // return dplCmsPublicConfigSchema.safeParse(config.goConfiguration).data?.public ?? null
+
+  return Promise.resolve(
+    dplCmsPublicConfigSchema.safeParse({
+      data: {
+        public: {
+          loginUrls: {
+            adgangsplatformen: "heps",
+          },
+          logoutUrls: {
+            adgangsplatformen: "heps",
+          },
+        },
+      },
+    }).data?.public ?? null
+  )
 }

@@ -24,6 +24,7 @@ function getEnvs() {
     UNLILOGIN_SERVICES_WS_USER: process.env.UNLILOGIN_SERVICES_WS_USER,
     UNLILOGIN_SERVICES_WS_PASSWORD: process.env.UNLILOGIN_SERVICES_WS_PASSWORD,
     UNILOGIN_MUNICIPALITY_ID: process.env.UNILOGIN_MUNICIPALITY_ID,
+    REVALIDATE_CACHE_SECRET: process.env.REVALIDATE_CACHE_SECRET,
   }
 }
 
@@ -52,6 +53,7 @@ const EnvServerSchema = z.object({
   UNILOGIN_CLIENT_ID: z.string().optional(),
   UNILOGIN_CLIENT_SECRET: z.string().optional(),
   UNILOGIN_WELLKNOWN_URL: z.string().refine(validateUrl).optional(),
+  REVALIDATE_CACHE_SECRET: z.string(),
 })
 
 type EnvSchema = z.infer<typeof EnvSchema>

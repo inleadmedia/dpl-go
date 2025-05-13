@@ -1,18 +1,21 @@
 import { Metadata } from "next"
+import { Suspense } from "react"
 
 import ProfilePageLayout from "@/app/user/profile/ProfilePageLayout"
 import { setPageMetadata } from "@/lib/helpers/helper.metadata"
 
 export const metadata: Metadata = setPageMetadata("Din profil")
 
-const Page = () => {
+const ProfilePage = async () => {
+  return <ProfilePageLayout />
+}
+
+const Page = async () => {
   return (
-    <>
-      <ProfilePageLayout />
-    </>
+    <Suspense>
+      <ProfilePage />
+    </Suspense>
   )
 }
 
 export default Page
-
-export const dynamic = "force-dynamic"

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import React from "react"
+import React, { Suspense } from "react"
 
 import loadPage from "@/app/[[...slug]]/loadPage"
 import BasicPageLayout from "@/components/pages/basicPageLayout/BasicPageLayout"
@@ -25,9 +25,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string[]
   }
 }
 
-async function page(props: { params: Promise<{ slug: string[] }> }) {
-  const data = await getPage((await props.params).slug)
-
+async function PageComponent({ params }: { params: Promise<{ slug: string[] }> }) {
+  const data = await getPage((await params).slug)
   const routeType = data.route?.__typename
 
   if (routeType === "RouteRedirect") {
@@ -49,4 +48,12 @@ async function page(props: { params: Promise<{ slug: string[] }> }) {
   return <BasicPageLayout pageData={pageData as NodeGoPage} />
 }
 
-export default page
+async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
+  return (
+    <Suspense>
+      <PageComponent params={params} />
+    </Suspense>
+  )
+}
+
+export default Page

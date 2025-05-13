@@ -14,29 +14,37 @@ export type HandlerWithAuth<TExtraContext = Record<string, unknown>> = (
 ) => Promise<Response>
 
 // WithAuth middleware.
+// export function withAuth<TExtraContext extends Record<string, unknown> = Record<string, unknown>>(
+//   handler: HandlerWithAuth<TExtraContext>
+// ): (req: NextRequest, context?: TExtraContext) => Promise<Response> {
+//   return async (req, extraContext) => {
+//     const session = await getSession()
+
+//     try {
+//       z.object({
+//         isLoggedIn: z.literal(true),
+//         type: z.literal("unilogin"),
+//       }).parse(session)
+//       const uniLoginUserInfo = uniLoginUserInfoSchema.parse(session?.uniLoginUserInfo)
+
+//       const contextWithAuth: AuthContextBase & TExtraContext = {
+//         ...(extraContext ?? ({} as TExtraContext)),
+//         uniLoginUserInfo,
+//       }
+
+//       // If authrnticated, call the original handler
+//       return handler(req, contextWithAuth)
+//     } catch (error) {
+//       console.error(error)
+//       return new Response("Not Authorized", { status: 401 })
+//     }
+//   }
+// }
+
 export function withAuth<TExtraContext extends Record<string, unknown> = Record<string, unknown>>(
   handler: HandlerWithAuth<TExtraContext>
 ): (req: NextRequest, context?: TExtraContext) => Promise<Response> {
   return async (req, extraContext) => {
-    const session = await getSession()
-
-    try {
-      z.object({
-        isLoggedIn: z.literal(true),
-        type: z.literal("unilogin"),
-      }).parse(session)
-      const uniLoginUserInfo = uniLoginUserInfoSchema.parse(session?.uniLoginUserInfo)
-
-      const contextWithAuth: AuthContextBase & TExtraContext = {
-        ...(extraContext ?? ({} as TExtraContext)),
-        uniLoginUserInfo,
-      }
-
-      // If authrnticated, call the original handler
-      return handler(req, contextWithAuth)
-    } catch (error) {
-      console.error(error)
-      return new Response("Not Authorized", { status: 401 })
-    }
+    return new Response("Not Authorized", { status: 401 })
   }
 }

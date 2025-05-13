@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import React from "react"
+import React, { Suspense } from "react"
 
 import loadArticle from "@/app/artikel/[...slug]/loadArticle"
 import ArticlePageLayout, {
@@ -15,14 +15,15 @@ async function getPage(slug: string[]) {
 export async function generateMetadata(props: { params: Promise<{ slug: string[] }> }) {
   const data = await getPage((await props.params).slug)
 
-  if (data.route?.__typename === "RouteInternal") {
-    const { title } = data.route.entity as TArticlePageLayoutProps
-
-    return setPageMetadata(title)
+  if (data.route?.__typename !== "RouteInternal") {
+    return null
   }
+
+  const { title } = data.route.entity as TArticlePageLayoutProps
+  return setPageMetadata(title)
 }
 
-async function page(props: { params: Promise<{ slug: string[] }> }) {
+async function ArticlePage(props: { params: Promise<{ slug: string[] }> }) {
   const data = await getPage((await props.params).slug)
   const routeType = data.route?.__typename
 
@@ -45,4 +46,12 @@ async function page(props: { params: Promise<{ slug: string[] }> }) {
   return <ArticlePageLayout pageData={pageData as TArticlePageLayoutProps} />
 }
 
-export default page
+async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
+  return (
+    <Suspense>
+      <ArticlePage params={params} />
+    </Suspense>
+  )
+}
+
+export default Page

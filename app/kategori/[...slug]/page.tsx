@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import React from "react"
+import React, { Suspense } from "react"
 
 import loadCategoryPage from "@/app/kategori/[...slug]/loadCategoryPage"
 import CategoryPageLayout from "@/components/pages/categoryPageLayout/CategoryPageLayout"
@@ -21,7 +21,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string[]
   }
 }
 
-async function page(props: { params: Promise<{ slug: string[] }> }) {
+async function CategoryPage(props: { params: Promise<{ slug: string[] }> }) {
   const data = await getPage((await props.params).slug)
 
   const routeType = data.route?.__typename
@@ -45,4 +45,12 @@ async function page(props: { params: Promise<{ slug: string[] }> }) {
   return <CategoryPageLayout pageData={pageData as NodeGoCategory} />
 }
 
-export default page
+async function Page({ params }: { params: Promise<{ slug: string[] }> }) {
+  return (
+    <Suspense>
+      <CategoryPage params={params} />
+    </Suspense>
+  )
+}
+
+export default Page

@@ -1,7 +1,7 @@
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query"
 import { Metadata } from "next"
 import { cookies } from "next/headers"
-import React from "react"
+import React, { Suspense } from "react"
 
 import WorkPageLayout from "@/components/pages/workPageLayout/WorkPageLayout"
 import getQueryClient from "@/lib/getQueryClient"
@@ -11,9 +11,8 @@ import { setPageMetadata } from "@/lib/helpers/helper.metadata"
 
 export const metadata: Metadata = setPageMetadata("Materiale")
 
-async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params
-  const { id } = params
+async function WorkPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const cookieStore = await cookies()
 
   const queryClient = getQueryClient()
@@ -37,6 +36,12 @@ async function Page(props: { params: Promise<{ id: string }> }) {
   )
 }
 
-export const dynamic = "force-dynamic"
+async function Page({ params }: { params: Promise<{ id: string }> }) {
+  return (
+    <Suspense>
+      <WorkPage params={params} />
+    </Suspense>
+  )
+}
 
 export default Page

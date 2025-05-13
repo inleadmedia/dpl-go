@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
+import { Suspense } from "react"
 
 import Footer from "@/components/global/footer/Footer"
 import GridHelper from "@/components/global/gridHelper/GridHelper"
