@@ -54,7 +54,7 @@ cd /app || exit 1
 
 # This is a tryout. This line makes sure that we wipe the cache when restarting the service.
 # If the app state/cache gets corrupted we can redeploy and by that make sure that the cache is empty.
-rm -rf .next/* 2>/dev/null || true
+rm -rf .next/cache 2>/dev/null || true &
 
 yarn build && yarn start
 exit 0
