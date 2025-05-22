@@ -1,5 +1,6 @@
 import { add, isPast, sub } from "date-fns"
 import { IronSession, getIronSession } from "iron-session"
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { NextRequest, NextResponse } from "next/server"
 
 import { getEnv, getServerEnv } from "../config/env"
@@ -61,27 +62,45 @@ export const defaultSession: TSessionData = {
   type: "anonymous",
 }
 
+const getCookieStore = async (cookieStore?: ReadonlyRequestCookies) => {
+  if (cookieStore) {
+    return cookieStore
+  }
+  const { cookies } = await import("next/headers")
+  const headerCookieStore = await cookies()
+  return headerCookieStore
+}
+
 export async function getSession(options?: {
-  request: NextRequest
-  response: NextResponse
+  cookieStore?: ReadonlyRequestCookies
+  requestAndResponse?: {
+    request: NextRequest
+    response: NextResponse
+  }
 }): Promise<IronSession<TSessionData>> {
   // If we are buikding the go app, we will use the default session to simulate an anonymous user.
   if (isBuildingGoApp()) {
     return defaultSession as IronSession<TSessionData>
   }
 
-  const { cookies } = await import("next/headers")
   const sessionOptions = await getSessionOptions()
   if (!sessionOptions) {
     return defaultSession as IronSession<TSessionData>
   }
 
   try {
-    const cookieStore = await cookies()
+    // Get the cookie store either from provided cookieStore or from the request.
+    const cookieStore = await getCookieStore(options?.cookieStore)
     const libraryToken = cookieStore.get(goConfig("library-token.cookie-name"))?.value
-    const session = !options
-      ? await getIronSession<TSessionData>(cookieStore, sessionOptions)
-      : await getIronSession<TSessionData>(options.request, options.response, sessionOptions)
+    // If we have a request and response, we will use that to get the session.
+    // Otherwise we will use the provided cookie store.
+    const session = options?.requestAndResponse
+      ? await getIronSession<TSessionData>(
+          options.requestAndResponse.request,
+          options.requestAndResponse.response,
+          sessionOptions
+        )
+      : await getIronSession<TSessionData>(cookieStore, sessionOptions)
 
     if (!session?.isLoggedIn) {
       // Return the default session if the session is not logged in.

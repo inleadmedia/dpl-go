@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   // Make sure we have a library token cookie.
   await ensureLibraryTokenExist(request)
 
-  const session = await getSession({ request, response })
+  const session = await getSession({ requestAndResponse: { request, response } })
 
   // Destroy the session if we have an active session but no dpl cms session cookie.
   if (!userIsAnonymous(session) && session.type === "adgangsplatformen") {
