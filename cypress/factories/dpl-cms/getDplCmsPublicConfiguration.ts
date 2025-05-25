@@ -1,26 +1,25 @@
 import { Factory } from "fishery"
 
+import { TDplCmsPublicConfig } from "@/lib/config/dpl-cms/dplCmsConfig"
 import { GetDplCmsPublicConfigurationQuery } from "@/lib/graphql/generated/dpl-cms/graphql"
 
 import defaultGoResponse from "./factory-parts/defaultGoResponse"
 
-type Params = {
-  appUrl: string
-}
-export default Factory.define<GetDplCmsPublicConfigurationQuery, Params>(({ transientParams }) => {
-  const { appUrl } = transientParams
-
+export default Factory.define<GetDplCmsPublicConfigurationQuery>(() => {
   return {
     go: defaultGoResponse.build(),
     goConfiguration: {
       public: {
         loginUrls: {
-          adgangsplatformen: `${appUrl}/login?current-path=/go-login`,
+          adgangsplatformen: "/mocked/login",
         },
         logoutUrls: {
-          adgangsplatformen: `${appUrl}/logout?current-path=/go-logout`,
+          adgangsplatformen: "/mocked/logout",
         },
-      },
+        libraryInfo: {
+          name: "Test Library",
+        },
+      } satisfies TDplCmsPublicConfig,
     },
   }
 })
