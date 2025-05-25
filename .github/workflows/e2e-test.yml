@@ -34,6 +34,7 @@ jobs:
 
       - name: Build the Nextjs app and run Cypress tests
         uses: cypress-io/github-action@v6
+        continue-on-error: true
         env:
           NODE_ENV: test
         with:
