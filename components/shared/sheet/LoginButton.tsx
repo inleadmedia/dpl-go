@@ -4,7 +4,6 @@ import { Button, ButtonProps } from "@/components/shared/button/Button"
 import ButtonWithLoadingStateHoc from "@/components/shared/button/ButtonWithLoadingStateHoc"
 
 type TFindBookButtonProps = {
-  isLoading?: boolean
   onClick?: () => void
   url: string
 } & ButtonProps
