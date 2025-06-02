@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import React from "react"
 
 import { Button } from "@/components/shared/button/Button"
 import DarkModeToggle from "@/components/shared/darkModeToggle/DarkModeToggle"
