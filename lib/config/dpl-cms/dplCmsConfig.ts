@@ -21,11 +21,6 @@ const queryDplCmsPublicConfig = async () => {
 }
 
 const getDplCmsPrivateConfigData = async () => {
-  "use cache"
-  // Automatically expires after a few minutes
-  // @todo Implement cache tags when we are sure that the cms is revalidating go configuration properly.
-  cacheLife("minutes")
-
   try {
     const data = await queryDplCmsPrivateConfig()
     return privateConfigSchema.parse(data)
