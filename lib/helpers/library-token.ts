@@ -28,6 +28,8 @@ export const loadLibraryToken = async () => {
     }
     return validateLibraryToken.data
   } catch {
+    // eslint-disable-next-line no-console
+    console.log("process.env DEBUG:", process.env)
     console.error("Could not load library token.")
     return null
   }
