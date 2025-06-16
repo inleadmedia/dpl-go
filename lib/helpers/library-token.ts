@@ -28,6 +28,7 @@ export const loadLibraryToken = async () => {
     }
     return validateLibraryToken.data
   } catch {
+    console.log("process.env DEBUG:", process.env)
     console.error("Could not load library token.")
     return null
   }

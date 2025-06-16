@@ -32,6 +32,8 @@ export function fetcher<TData, TVariables>(
   const { next, headers } = options || {}
   const dplCmsGraphqlEndpoint = getEnv("GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS")
 
+  console.log("Fetching DPL CMS GraphQL data from:", dplCmsGraphqlEndpoint)
+
   return async (): Promise<TData> => {
     try {
       const res = await fetch(dplCmsGraphqlEndpoint, {
