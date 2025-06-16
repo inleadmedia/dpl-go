@@ -14,5 +14,8 @@ export NEXT_PUBLIC_GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS="${LAGOON_ROUTE}/graphql"
 # Go to the app directory if it doesn't exist then never mind.
 cd /app || exit 1
 
+echo "Starting DPL CMS with the following environment variables:"
+printenv
+
 yarn start
 exit 0
