@@ -32,6 +32,9 @@ export function fetcher<TData, TVariables>(
   const { next, headers } = options || {}
   const dplCmsGraphqlEndpoint = getEnv("GRAPHQL_SCHEMA_ENDPOINT_DPL_CMS")
 
+  // eslint-disable-next-line no-console
+  console.log({ dplCmsGraphqlEndpoint, query, variables })
+
   return async (): Promise<TData> => {
     try {
       const res = await fetch(dplCmsGraphqlEndpoint, {
@@ -55,7 +58,8 @@ export function fetcher<TData, TVariables>(
       const cacheTagsRaw = res.headers.get(goConfig("caching.dpl-cms.cachetags-header"))
       return { ...json.data, go: { cacheTags: cacheTagsRaw ? cacheTagsRaw.split(" ") : null } }
     } catch (error) {
-      throw new Error("Failed to fetch data from DPL CMS", { cause: error })
+      console.error(error)
+      throw new Error("Failed to fetch data from DPL CMS")
     }
   }
 }
