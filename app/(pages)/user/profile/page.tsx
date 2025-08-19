@@ -6,8 +6,6 @@ import ProfilePageLayout from "./ProfilePageLayout"
 
 export const metadata: Metadata = setPageMetadata("Din profil")
 
-const Page = () => {
-  return <ProfilePageLayout />
-}
+const Page = () => <ProfilePageLayout />
 
 export default Page
