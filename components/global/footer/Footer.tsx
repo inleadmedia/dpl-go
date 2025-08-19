@@ -30,7 +30,7 @@ export default function Footer({ libraryLink }: { libraryLink: React.ReactNode }
               </li>
               <li>
                 <SmartLink
-                  href="https://ereolengo.dk/inspiration/til-skoler"
+                  href="https://www.detdigitalefolkebibliotek.dk/om-uni-login"
                   linkType="external"
                   className="animate-text-underline text-typo-body-md">
                   Skoler og UNI-login
@@ -38,7 +38,7 @@ export default function Footer({ libraryLink }: { libraryLink: React.ReactNode }
               </li>
               <li>
                 <SmartLink
-                  href="https://ereolengo.dk/content/bliv-boganbefaler"
+                  href="https://selvbetjening.aarhuskommune.dk/da/content/upload-af-anbefaling-til-ereolen-go-0"
                   linkType="external"
                   className="animate-text-underline text-typo-body-md">
                   Bliv boganbefaler
