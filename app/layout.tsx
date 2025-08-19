@@ -8,9 +8,7 @@ import Header from "@/components/global/header/Header"
 import Theme from "@/components/global/theme/Theme"
 import { DynamicModal } from "@/components/shared/dynamicModal/DynamicModal"
 import { DynamicSheet } from "@/components/shared/dynamicSheet/DynamicSheet"
-import { getDplCmsPublicConfig } from "@/lib/config/dpl-cms/dplCmsConfig"
 import { setLayoutMetadata } from "@/lib/helpers/helper.metadata"
-import DplCmsConfigContextProvider from "@/lib/providers/DplCmsConfigContextProvider"
 import ReactQueryProvider from "@/lib/providers/ReactQueryProvider"
 import "@/styles/globals.css"
 
@@ -34,27 +32,6 @@ const GTFlexa = localFont({
   display: "swap",
 })
 
-async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  const dplCmsConfig = await getDplCmsPublicConfig()
-  return (
-    <DplCmsConfigContextProvider dplCmsConfig={dplCmsConfig}>
-      <Theme>
-        <ReactQueryProvider>
-          <Header />
-          <DynamicSheet />
-          <DynamicModal />
-          {children}
-          <Footer />
-        </ReactQueryProvider>
-      </Theme>
-    </DplCmsConfigContextProvider>
-  )
-}
-
 export default function Layout({
   children,
 }: Readonly<{
@@ -64,11 +41,19 @@ export default function Layout({
     <html lang="da">
       <body className={`${GTFlexa.variable} duration-dark-mode antialiased transition-all`}>
         <GridHelper hideInProduction />
-        <Suspense>
-          <RootLayout>
+        <Theme>
+          <ReactQueryProvider>
+            <Header />
+            <Suspense>
+              <DynamicSheet />
+            </Suspense>
+            <DynamicModal />
             <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
-          </RootLayout>
-        </Suspense>
+            <Suspense>
+              <Footer />
+            </Suspense>
+          </ReactQueryProvider>
+        </Theme>
       </body>
     </html>
   )
