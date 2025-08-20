@@ -45,9 +45,7 @@ export default function Layout({
         <Theme>
           <ReactQueryProvider>
             <Header />
-            <Suspense>
-              <DynamicSheet />
-            </Suspense>
+            <DynamicSheet />
             <DynamicModal />
             <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
             <Suspense>
