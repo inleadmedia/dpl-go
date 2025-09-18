@@ -9,7 +9,16 @@ updates:
     # Look for `package.json` and `lock` files in the `root` directory
     directory: "/"
     # The maximum number of pull requests for version updates
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 20
+    # Check the npm registry for updates every day (weekdays)
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"
+      timezone: Europe/Copenhagen
+    versioning-strategy: increase
+    labels:
+      - "dependencies"
     groups:
       radix-ui:
         patterns:
@@ -31,7 +40,6 @@ updates:
         patterns:
           - "next"
           - "@next/env"
-          - "next-themes"
           - "eslint-config-next"
           - "@next/eslint-plugin-next"
       tailwindcss:
@@ -47,27 +55,15 @@ updates:
         patterns:
           - "class-variance-authority"
           - "clsx"
-      tailwind-merge:
-        patterns:
-          - "tailwind-merge"
-          - "prettier-plugin-merge"
-          - "prettier-plugin-tailwindcss"
-          - "prettier-plugin-classnames"
       storybook:
         patterns:
           - "storybook"
           - "@storybook/*"
-          - "@chromatic-com/storybook"
           - "eslint-plugin-storybook"
       xstate:
         patterns:
           - "xstate"
           - "@xstate/*"
-      vite:
-        patterns:
-          - "vitest"
-          - "vite-tsconfig-paths"
-          - "@vitejs/plugin-react"
       react-query:
         patterns:
           - "@tanstack/react-query"
@@ -76,28 +72,48 @@ updates:
         patterns:
           - "jwt-simple"
           - "@types/jwt-simple"
-      cypress:
-        patterns:
-          - "cypress"
-          - "eslint-plugin-cypress"
-
-    # Check the npm registry for updates every day (weekdays)
-    schedule:
-      interval: weekly
-      timezone: Europe/Copenhagen
-    labels:
-      - "dependencies"
-
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        versions: [">=15.4.0-canary.47"]
+      - dependency-name: "@next/*"
+        versions: [">=15.4.0"]
+      - dependency-name: "zod"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "storybook"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@storybook/*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-plugin-storybook"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next-drupal"
+        versions: [">=2.0.0-beta.0"]
+      - dependency-name: "react"
+        versions: [">=19.0.0"]
+      - dependency-name: "react-dom"
+        versions: [">=19.0.0"]
+      - dependency-name: "@types/react"
+        versions: [">=19.0.0"]
+      - dependency-name: "@types/react-dom"
+        versions: [">=19.0.0"]
+      - dependency-name: "prettier-plugin-classnames"
+        versions: [">=0.7.3"]
+      - dependency-name: "sharp"
+        versions: [">=0.33.5"]
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     # Workflow files stored in the default location of `.github/workflows`
     # You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.
     directory: "/"
     # The maximum number of pull requests for version updates
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 20
     # Check the npm registry for updates every day (weekdays)
     schedule:
       interval: "weekly"
+      day: monday
+      time: "04:00"
+      timezone: Europe/Copenhagen
     labels:
       - dependencies
       - github_actions

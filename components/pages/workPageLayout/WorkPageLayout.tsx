@@ -11,7 +11,6 @@ import InfoBoxDetails from "@/components/shared/infoBox/InfoBoxDetails"
 import { SlideSelectSkeleton } from "@/components/shared/slideSelect/SlideSelect"
 import {
   ManifestationWorkPageFragment,
-  WorkFullWorkPageFragment,
   useGetMaterialQuery,
 } from "@/lib/graphql/generated/fbi/graphql"
 import { resolveUrl } from "@/lib/helpers/helper.routes"
@@ -28,7 +27,6 @@ function WorkPageLayout({ workId }: { workId: string }) {
   const { data, isLoading } = useGetMaterialQuery({
     wid: workId,
   })
-
   const [selectedManifestation, setSelectedManifestation] =
     useState<ManifestationWorkPageFragment>()
   const searchParams = useSearchParams()
@@ -37,27 +35,28 @@ function WorkPageLayout({ workId }: { workId: string }) {
     notFound()
   }
 
-  const work = data?.work as WorkFullWorkPageFragment
+  const work = data?.work
+  const bestRepresentation = work?.manifestations?.bestRepresentation
+  const allManifestations = work?.manifestations?.all
 
   const manifestations = useMemo(() => {
+    if (!allManifestations) return []
+
     return filterManifestationsByEdition(
-      filterManifestationsByMaterialType(
-        filterMaterialTypes(work?.manifestations.all as ManifestationWorkPageFragment[])
-      )
+      filterManifestationsByMaterialType(filterMaterialTypes(allManifestations))
     )
-  }, [work?.manifestations.all])
+  }, [allManifestations]) as ManifestationWorkPageFragment[]
 
   useEffect(() => {
     // Get the material type from the search params
     const searchParamsMaterialType = searchParams.get("type")
 
-    if (!searchParamsMaterialType) {
+    if (!searchParamsMaterialType && bestRepresentation) {
       // If no material type is specified is url params, redirect the bestRepresentation manifestation if available or a fallback manifestation
       const manifestation = getBestRepresentationOrFallbackManifestation(
-        work.manifestations.bestRepresentation,
+        bestRepresentation,
         manifestations
       )
-
       if (manifestation) {
         const url = resolveUrl({
           routeParams: { work: "work", wid: work.workId },
@@ -69,10 +68,10 @@ function WorkPageLayout({ workId }: { workId: string }) {
 
     // Filter out manifestations that don't match the search params material type
     const selectedManifestation = manifestations.find(manifestation => {
-      return !!manifestation.materialTypes.find(
+      return !!manifestation?.materialTypes.find(
         materialType => materialType.materialTypeGeneral.code === searchParamsMaterialType
       )
-    })
+    }) as ManifestationWorkPageFragment
 
     setSelectedManifestation(selectedManifestation)
   }, [searchParams, manifestations])
