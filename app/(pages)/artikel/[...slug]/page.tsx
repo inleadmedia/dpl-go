@@ -1,8 +1,9 @@
 import { isEmpty } from "lodash"
-import { cacheTag } from "next/dist/server/use-cache/cache-tag"
+//import { cacheTag } from "next/dist/server/use-cache/cache-tag"
 import { notFound } from "next/navigation"
 import React, { Suspense } from "react"
 
+import asyncMemoize from "@/lib/async-memoize.tsx";
 import RedirectNotFoundOrRenderPage from "@/components/global/dplCmsPage/RedirectNotFoundOrRenderPage"
 import ArticlePageLayout, {
   TArticlePageLayoutProps,
@@ -10,8 +11,8 @@ import ArticlePageLayout, {
 import { getEntityFromPageData, loadPageData } from "@/lib/helpers/dpl-cms-content"
 import { setPageMetadata } from "@/lib/helpers/helper.metadata"
 
-async function getPage(slug: string[]) {
-  "use cache"
+const getPage = asyncMemoize(async function(slug: string[]) {
+  //"use cache"
   const {
     go: { cacheTags },
     ...data
@@ -24,14 +25,18 @@ async function getPage(slug: string[]) {
     notFound()
   }
 
-  if (cacheTags) {
-    // eslint-disable-next-line no-console
-    console.log("------- Storing [article] cacheTags -----", cacheTags)
-    cacheTag(...cacheTags)
-  }
+  //if (cacheTags) {
+  //  // eslint-disable-next-line no-console
+  //  console.log("------- Storing [article] cacheTags -----", cacheTags)
+  //  cacheTag(...cacheTags)
+  //}
 
   return { go: { cacheTags }, ...data }
-}
+}, {
+  getKey: function(slug) {
+    return slug.join("/");
+  }
+});
 
 type TArticlePageProps = {
   params: Promise<{ slug: string[] }>

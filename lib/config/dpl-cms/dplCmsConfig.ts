@@ -2,6 +2,7 @@
 
 import { connection } from "next/server"
 
+import asyncMemoize from "@/lib/async-memoize.tsx";
 import {
   useGetDplCmsPrivateConfigurationQuery,
   useGetDplCmsPublicConfigurationQuery,
@@ -20,8 +21,8 @@ const queryDplCmsPublicConfig = async () => {
   return goConfiguration?.public ?? null
 }
 
-const getDplCmsPrivateConfigData = async () => {
-  "use cache"
+const getDplCmsPrivateConfigData = asyncMemoize(async () => {
+  //"use cache"
   // @todo: We should handle triggered revalidation or having a longer caching time.
   // Right now the default cache time should be 15 minutes.
 
@@ -38,7 +39,7 @@ const getDplCmsPrivateConfigData = async () => {
       },
     }
   }
-}
+});
 
 export const getDplCmsPrivateConfig = async () => {
   await connection()
@@ -69,8 +70,8 @@ export const getDplCmsPrivateConfig = async () => {
   }
 }
 
-const getDplCmsPublicConfigData = async () => {
-  "use cache"
+const getDplCmsPublicConfigData = asyncMemoize(async () => {
+  //"use cache"
   // @todo: We should handle triggered revalidation or having a longer caching time.
   // Right now the default cache time should be 15 minutes.
 
@@ -97,7 +98,7 @@ const getDplCmsPublicConfigData = async () => {
       },
     }
   }
-}
+});
 
 export const getDplCmsPublicConfig = async () => {
   await connection()

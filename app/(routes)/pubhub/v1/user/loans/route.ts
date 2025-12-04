@@ -56,3 +56,4 @@ async function getLibraryUserOrder(request: NextRequest, context: { uniLoginUser
 export const GET = withAuth(getLibraryUserOrder)
 
 export const dynamic = "force-dynamic"
+export const revalidate = 0; // disables caching for fully dynamic routes on NextJS 16;

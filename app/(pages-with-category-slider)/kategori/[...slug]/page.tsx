@@ -1,16 +1,17 @@
 import { isEmpty } from "lodash"
-import { cacheTag } from "next/dist/server/use-cache/cache-tag"
+//import { cacheTag } from "next/dist/server/use-cache/cache-tag"
 import { notFound } from "next/navigation"
 import React, { Suspense } from "react"
 
+import asyncMemoize from "@/lib/async-memoize.tsx";
 import RedirectNotFoundOrRenderPage from "@/components/global/dplCmsPage/RedirectNotFoundOrRenderPage"
 import CategoryPageLayout from "@/components/pages/categoryPageLayout/CategoryPageLayout"
 import { NodeGoCategory } from "@/lib/graphql/generated/dpl-cms/graphql"
 import { getEntityFromPageData, loadPageData } from "@/lib/helpers/dpl-cms-content"
 import { setPageMetadata } from "@/lib/helpers/helper.metadata"
 
-async function getPage(slug: string[]) {
-  "use cache"
+const getPage = asyncMemoize(async function(slug: string[]) {
+  //"use cache"
   const {
     go: { cacheTags },
     ...data
@@ -23,14 +24,18 @@ async function getPage(slug: string[]) {
     notFound()
   }
 
-  if (cacheTags) {
-    // eslint-disable-next-line no-console
-    console.log("------- Storing [category] cacheTags -----", cacheTags)
-    cacheTag(...cacheTags)
-  }
+  //if (cacheTags) {
+  //  // eslint-disable-next-line no-console
+  //  console.log("------- Storing [category] cacheTags -----", cacheTags)
+  //  cacheTag(...cacheTags)
+  //}
 
   return { go: { cacheTags }, ...data }
-}
+}, {
+  getKey: function(slug) {
+    return slug.join("/");
+  }
+});
 
 export async function generateMetadata(props: { params: Promise<{ slug: string[] }> }) {
   const data = await getPage((await props.params).slug)

@@ -29,3 +29,4 @@ export async function GET() {
 }
 
 export const dynamic = "force-dynamic"
+export const revalidate = 0; // disables caching for fully dynamic routes on NextJS 16;
