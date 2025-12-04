@@ -14,6 +14,7 @@ function getAllowedHostname() {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  cacheComponents: true,
   experimental: {
     dynamicIO: true,
   },
@@ -53,7 +54,18 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, options) => {
+  turbopack: {
+    rules: {
+      "*.svg": {
+        loaders: [{
+          loader: "@svgr/webpack",
+          options: { babel: false }
+        }],
+        as: "*.js"
+      }
+    }
+  }
+  /*webpack: (config, options) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -65,7 +77,7 @@ const nextConfig = {
       ],
     })
     return config
-  },
+  },*/
 }
 
 export default withPlaiceholder(nextConfig)
