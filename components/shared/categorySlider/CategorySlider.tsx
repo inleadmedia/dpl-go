@@ -3,8 +3,8 @@
 import { useWindowSize } from "@uidotdev/usehooks"
 import { motion } from "framer-motion"
 import { KeenSliderOptions, useKeenSlider } from "keen-slider/react"
-import { usePathname } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import React, { startTransition, useEffect, useOptimistic, useState } from "react"
 
 import { WheelControls } from "@/components/paragraphs/MaterialSlider/helper"
 import { MediaImage, NodeGoCategory } from "@/lib/graphql/generated/dpl-cms/graphql"
@@ -47,6 +47,8 @@ function CategorySlider() {
   const size = useWindowSize()
   const [categories, setCategories] = useState<TNodeGoCategory[] | false>(false)
   const pathname = usePathname()
+  const router = useRouter()
+  const [optimisticPath, setOptimisticPath] = useOptimistic(pathname)
 
   useEffect(() => {
     categorySlider.current?.update()
@@ -81,14 +83,21 @@ function CategorySlider() {
           transition={{ duration: 0.3 }}
           ref={sliderRef}
           className={cn(
-            "keen-slider relative z-10 w-full !overflow-visible opacity-0 transition-opacity duration-300"
+            `keen-slider relative z-10 w-full overflow-visible! opacity-0 transition-opacity
+            duration-300`
           )}>
           {categories.map((category, index) => (
             <CategorySlide
-              isSelected={pathname === category.path}
+              isSelected={optimisticPath === category.path}
               key={index}
               category={category}
               index={index}
+              onNavigate={path => {
+                startTransition(() => {
+                  setOptimisticPath(path)
+                  router.push(path)
+                })
+              }}
             />
           ))}
         </motion.div>
@@ -101,10 +110,12 @@ function CategorySlide({
   category,
   index,
   isSelected,
+  onNavigate,
 }: {
   category: TNodeGoCategory
   index: number
   isSelected: boolean
+  onNavigate: (path: string) => void
 }) {
   const [randomIndex, setRandomIndex] = useState<number>(0)
 
@@ -128,19 +139,23 @@ function CategorySlide({
   }, [rotations.length])
 
   return (
-    <div className="keen-slider__slide !overflow-visible" key={category.id}>
+    <div className="keen-slider__slide overflow-visible!" key={category.id}>
       <SmartLink
         aria-label={`Gå til kategori ${category.categoryMenuTitle}`}
         href={category.path || ""}
+        onClick={e => {
+          e.preventDefault()
+          onNavigate(category.path || "")
+        }}
         className={cn(
-          `group flex h-full w-full cursor-pointer flex-col gap-y-2 !overflow-visible p-[12px] ring-0 outline-0
-          transition-all duration-200 lg:p-[24px]`,
+          `group flex h-full w-full cursor-pointer flex-col gap-y-2 overflow-visible! p-3 ring-0
+          outline-0 transition-all duration-200 lg:p-6`,
           isSelected ? `${rotations[randomIndex]}` : ""
         )}>
         <div
           className={cn(
-            `bg-background-overlay relative flex aspect-1/1 items-center justify-center overflow-hidden
-            rounded-sm transition-all duration-300 forced-colors:hidden`,
+            `bg-background-overlay relative flex aspect-1/1 items-center justify-center
+            overflow-hidden rounded-sm transition-all duration-300 forced-colors:hidden`,
             // Add hover effect based on every category by fourth index
             index % 4 === 0 &&
               "group-hover:bg-content-1 group-focus:bg-content-1 group-has-checked:bg-content-1",
@@ -153,10 +168,10 @@ function CategorySlide({
           )}>
           {category.categoryMenuImage.mediaImage.url && (
             <ImageBase
-              className="grayscale-100 transition-all duration-300 group-hover:grayscale-0 group-focus:grayscale-0
-                group-has-checked:grayscale-0"
+              className="grayscale-100 transition-all duration-300 group-hover:grayscale-0
+                group-focus:grayscale-0 group-has-checked:grayscale-0"
               sizes="10vw"
-              imageSizing="intrinsic"
+              imageSizing="fillParent"
               src={category.categoryMenuImage.mediaImage.url}
               width={category.categoryMenuImage.mediaImage.width}
               height={category.categoryMenuImage.mediaImage.height}

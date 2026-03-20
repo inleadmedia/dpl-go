@@ -73,6 +73,8 @@ const WorkPageHeader = ({ manifestations, work, selectedManifestation }: WorkPag
   const selectedManifestationMaterialTypeCode =
     selectedManifestation?.materialTypes[0].materialTypeGeneral.code
 
+  const manifestationKey = selectedManifestation?.pid
+
   const isSelectedManifestationPodcast =
     selectedManifestationMaterialTypeCode === "PODCASTS" || false
 
@@ -91,9 +93,17 @@ const WorkPageHeader = ({ manifestations, work, selectedManifestation }: WorkPag
         transition={{ duration: 0.5 }}
         exit={{ opacity: 0 }}>
         <div className="col-span-4 h-auto lg:order-2">
-          <div className="rounded-base flex aspect-1/1 h-auto w-full flex-col items-center justify-center lg:aspect-4/5">
-            {covers && <CoverPicture alt="Forsidebillede på værket" covers={covers} />}
-          </div>
+          <motion.div
+            key={manifestationKey}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="rounded-base flex aspect-1/1 h-auto w-full flex-col items-center
+              justify-center lg:aspect-4/5">
+            {covers && (
+              <CoverPicture withTilt={true} alt="Forsidebillede på værket" covers={covers} />
+            )}
+          </motion.div>
           {slideSelectOptions && (
             <div className="flex w-full justify-center pt-12">
               <SlideSelect
@@ -117,7 +127,9 @@ const WorkPageHeader = ({ manifestations, work, selectedManifestation }: WorkPag
           </h1>
           <WorkAuthors creators={work.creators || selectedManifestation?.contributors} />
         </div>
-        <div className="mt-grid-gap-3 col-span-4 flex flex-col items-end justify-end lg:order-3 lg:mt-0">
+        <div
+          className="mt-grid-gap-3 col-span-4 flex flex-col items-end justify-end lg:order-3
+            lg:mt-0">
           {isLoggedIn ? (
             <WorkPageButtonsLoggedIn
               workId={work.workId}

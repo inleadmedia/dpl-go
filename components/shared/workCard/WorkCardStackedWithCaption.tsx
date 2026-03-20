@@ -65,8 +65,8 @@ const WorkCardStackedWithCaption = ({
         <div
           key={index}
           className={cn(
-            `rounded-base !dark:bg-background dark:bg-background-overlay-solid absolute top-0 right-0 left-0
-            aspect-5/7 w-full`,
+            `rounded-base !dark:bg-background dark:bg-background-overlay-solid absolute top-0
+            right-0 left-0 aspect-5/7 w-full`,
             {
               "shadow-stacked-card": index < 3,
               "rotate-3": index === 0,
@@ -92,7 +92,6 @@ const WorkCardStackedWithCaption = ({
               title={title}
               bestRepresentation={manifestation}
               manifestations={manifestations}
-              isWithTilt
             />
           ) : (
             <WorkCardEmpty

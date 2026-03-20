@@ -88,7 +88,7 @@ export function getServerEnv<T extends keyof EnvServerSchema>(
   return validateEnv(EnvServerSchema)[key]
 }
 
-function validateEnv<T extends typeof EnvSchema | typeof EnvServerSchema>(schema: T): z.infer<T> {
+function validateEnv<T extends z.ZodSchema>(schema: T): z.infer<T> {
   const result = schema.safeParse(getEnvs())
 
   if (result.success) return result.data
@@ -96,7 +96,7 @@ function validateEnv<T extends typeof EnvSchema | typeof EnvServerSchema>(schema
   const message = "Environment variables doesn't match type signature"
   console.error("\n\n\x1b[41m%s\x1b[0m", message)
   console.info("Type mismatch: ", result.error.toString())
-  throw "Make sure you have all the required environment variables set"
+  throw new Error("Make sure you have all the required environment variables set")
 }
 
 function validateUrl(url: string) {
@@ -108,9 +108,14 @@ function validateUrl(url: string) {
   }
 }
 
-// Validating runtime on start-up for browser or server side
-if (typeof window !== "undefined") {
-  validateEnv(EnvSchema)
-} else {
-  validateEnv(EnvServerSchema)
+// If SKIP_ENV_VALIDATION is set to "1", we skip env validation.
+const shouldValidateEnv = process.env?.SKIP_ENV_VALIDATION !== "1"
+if (shouldValidateEnv) {
+  if (typeof window !== "undefined") {
+    // Validating envs for client-side
+    validateEnv(EnvSchema)
+  } else {
+    // Validating envs for server-side
+    validateEnv(EnvServerSchema)
+  }
 }
